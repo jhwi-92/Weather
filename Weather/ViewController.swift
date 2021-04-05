@@ -18,15 +18,15 @@ class ViewController: UIViewController {
         
     }
 
+    //네비게이션 바 투명하도록
     func setNavigationBar(){
             let bar:UINavigationBar! =  self.navigationController?.navigationBar
         bar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
             bar.shadowImage = UIImage()
         bar.backgroundColor = UIColor.clear
-        }
+    }
 
 
-    //출처: https://tom7930.tistory.com/23 [Dr.kim의 나를 위한 블로그]
 }
 
 
