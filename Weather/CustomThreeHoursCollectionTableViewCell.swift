@@ -1,16 +1,15 @@
 //
-//  CustomCollectionViewTableViewCell.swift
+//  CustomThreeHoursCollectionTableViewCell.swift
 //  Weather
 //
-//  Created by jh on 2021/04/06.
+//  Created by jh on 2021/04/07.
 //
 
 import UIKit
 
-class CustomCollectionViewTableViewCell: UITableViewCell{
-   
-    
+class CustomThreeHoursCollectionTableViewCell: UITableViewCell {
 
+    
     @IBOutlet weak var collectionView: UICollectionView!
     //@IBOutlet weak var collectionView: UICollectionView!{
 //        didSet(newCollectionView) {
@@ -18,19 +17,17 @@ class CustomCollectionViewTableViewCell: UITableViewCell{
 //            newCollectionView.dataSource = self;
 //        }
 //    }
-    
     @IBOutlet weak var headerText: UILabel!
+    
     override func prepareForReuse() {
-            self.collectionView.contentOffset = .zero
-            self.collectionView.reloadData()
-        }
+        self.collectionView.contentOffset = .zero
+        self.collectionView.reloadData()
+    }
     
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
-        //self.collectionView!.reloadData()
     }
-    
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
