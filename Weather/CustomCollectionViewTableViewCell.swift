@@ -12,21 +12,17 @@ class CustomCollectionViewTableViewCell: UITableViewCell{
     
 
     @IBOutlet weak var collectionView: UICollectionView!
-    //@IBOutlet weak var collectionView: UICollectionView!{
-//        didSet(newCollectionView) {
-//            newCollectionView.delegate = self;
-//            newCollectionView.dataSource = self;
-//        }
-//    }
     
     @IBOutlet weak var headerText: UILabel!
     override func prepareForReuse() {
             self.collectionView.contentOffset = .zero
             self.collectionView.reloadData()
+        
         }
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        
         // Initialization code
         //self.collectionView!.reloadData()
     }

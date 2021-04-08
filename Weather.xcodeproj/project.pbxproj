@@ -19,6 +19,8 @@
 		E92718DA261C75E200EB0FBB /* CustomCollectionViewTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E92718D9261C75E200EB0FBB /* CustomCollectionViewTableViewCell.swift */; };
 		E92718DD261DA2F800EB0FBB /* CustomThreeHoursCollectionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E92718DC261DA2F800EB0FBB /* CustomThreeHoursCollectionTableViewCell.swift */; };
 		E92718E0261DAC4C00EB0FBB /* CustomThreeHoursCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E92718DF261DAC4C00EB0FBB /* CustomThreeHoursCollectionViewCell.swift */; };
+		E92718E3261EF13100EB0FBB /* CustomWeekCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E92718E2261EF13100EB0FBB /* CustomWeekCollectionViewCell.swift */; };
+		E92718E6261EF1CB00EB0FBB /* CustomWeekCollectionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E92718E5261EF1CB00EB0FBB /* CustomWeekCollectionTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +38,8 @@
 		E92718D9261C75E200EB0FBB /* CustomCollectionViewTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomCollectionViewTableViewCell.swift; sourceTree = "<group>"; };
 		E92718DC261DA2F800EB0FBB /* CustomThreeHoursCollectionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomThreeHoursCollectionTableViewCell.swift; sourceTree = "<group>"; };
 		E92718DF261DAC4C00EB0FBB /* CustomThreeHoursCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomThreeHoursCollectionViewCell.swift; sourceTree = "<group>"; };
+		E92718E2261EF13100EB0FBB /* CustomWeekCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomWeekCollectionViewCell.swift; sourceTree = "<group>"; };
+		E92718E5261EF1CB00EB0FBB /* CustomWeekCollectionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomWeekCollectionTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,6 +85,8 @@
 				E92718D9261C75E200EB0FBB /* CustomCollectionViewTableViewCell.swift */,
 				E92718DC261DA2F800EB0FBB /* CustomThreeHoursCollectionTableViewCell.swift */,
 				E92718DF261DAC4C00EB0FBB /* CustomThreeHoursCollectionViewCell.swift */,
+				E92718E2261EF13100EB0FBB /* CustomWeekCollectionViewCell.swift */,
+				E92718E5261EF1CB00EB0FBB /* CustomWeekCollectionTableViewCell.swift */,
 			);
 			path = Weather;
 			sourceTree = "<group>";
@@ -155,6 +161,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E92718E6261EF1CB00EB0FBB /* CustomWeekCollectionTableViewCell.swift in Sources */,
 				E92718D2261C406700EB0FBB /* CustomTodayTableViewCell.swift in Sources */,
 				E92718D7261C6E5400EB0FBB /* CustomApparelCollectionViewCell.swift in Sources */,
 				E92718DA261C75E200EB0FBB /* CustomCollectionViewTableViewCell.swift in Sources */,
@@ -162,6 +169,7 @@
 				E92718C3261B0AF800EB0FBB /* Weather.xcdatamodeld in Sources */,
 				E92718BD261B0AF800EB0FBB /* ViewController.swift in Sources */,
 				E92718E0261DAC4C00EB0FBB /* CustomThreeHoursCollectionViewCell.swift in Sources */,
+				E92718E3261EF13100EB0FBB /* CustomWeekCollectionViewCell.swift in Sources */,
 				E92718B9261B0AF800EB0FBB /* AppDelegate.swift in Sources */,
 				E92718BB261B0AF800EB0FBB /* SceneDelegate.swift in Sources */,
 			);
@@ -317,7 +325,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.Weather;
+				PRODUCT_BUNDLE_IDENTIFIER = com.JHWeather;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -336,7 +344,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.Weather;
+				PRODUCT_BUNDLE_IDENTIFIER = com.JHWeather;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

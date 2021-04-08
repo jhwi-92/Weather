@@ -15,4 +15,6 @@ class CustomThreeHoursCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var temperatureText: UILabel!
     @IBOutlet weak var commentText: UILabel!
     @IBOutlet weak var apparelImage: UIImageView!
+    
+    
 }

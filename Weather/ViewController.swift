@@ -18,12 +18,12 @@ class ViewController: UIViewController {
     }
     @IBOutlet var tableView: UITableView!
     
-    var tableViewIndexPath = Int()
     let testText:[String?] = ["트렌치코트","잠바","패딩","아아","어어"]
     let testDayText:[String?] = ["04/07","04/08","04/08","04/08","04/08","04/08","04/08","04/08"]
     let testHoursText:[String?] = ["21시","00시","03시","06시","09시","12시","15시","18시"]
     let testTemText:[String?] = ["11C","9C","6C","4C","10C","15C","16C","14C"]
     let testCommentText:[String?] = ["맑아요","흐려요","흐려요","흐려요","흐려요","맑아요","맑아요","맑아요"]
+    let testWeekText:[String?] = ["일요일", "월요일", "화요일", "수요일", "목요일", "금요일", "토요일"]
     override func viewDidLoad() {
         
         super.viewDidLoad()
@@ -81,34 +81,51 @@ extension ViewController: UITableViewDataSource {
     
     //섹션당 행의 개수
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 3
+        return 4
     }
     
     //cell
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.row == 0 {
-            guard let cell: CustomTodayTableViewCell = self.tableView.dequeueReusableCell(withIdentifier: "todayCell", for: indexPath) as? CustomTodayTableViewCell else {return CustomTodayTableViewCell()}
+            
+            guard let cell: CustomTodayTableViewCell = tableView.dequeueReusableCell(withIdentifier: "todayCell", for: indexPath) as? CustomTodayTableViewCell else {return CustomTodayTableViewCell()}
             cell.averageText.text = "평균"
             cell.todayText.text = "4월 6일 16시"
             cell.temperature.text = "20"
             cell.comment.text = "오늘은 흐린날이에요... 가디건 추천드려요"
             cell.temperatureSymbol.text = "oC"
+            
             return cell
         } else if indexPath.row == 1 {
-            tableViewIndexPath = indexPath.row
-            guard let cell: CustomCollectionViewTableViewCell = self.tableView.dequeueReusableCell(withIdentifier: "inCollectionCell", for: indexPath) as? CustomCollectionViewTableViewCell else {return CustomCollectionViewTableViewCell()}
+  
+            guard let cell: CustomCollectionViewTableViewCell = tableView.dequeueReusableCell(withIdentifier: "inCollectionCell", for: indexPath) as? CustomCollectionViewTableViewCell else {return CustomCollectionViewTableViewCell()}
             
             cell.collectionView?.delegate = self
             cell.collectionView?.dataSource = self
+            
+            cell.collectionView.tag = indexPath.row
             //cell.collectionView?.backgroundColor = UIColor.init(red: 10, green: 10, blue: 10, alpha: 1)
             
             return cell
         } else if indexPath.row == 2 {
-            tableViewIndexPath = indexPath.row
-            guard let cell: CustomThreeHoursCollectionTableViewCell = self.tableView.dequeueReusableCell(withIdentifier: "threeHoursCell", for: indexPath) as? CustomThreeHoursCollectionTableViewCell else {return CustomThreeHoursCollectionTableViewCell()}
+            
+            guard let cell: CustomThreeHoursCollectionTableViewCell = tableView.dequeueReusableCell(withIdentifier: "threeHoursCell", for: indexPath) as? CustomThreeHoursCollectionTableViewCell else {return CustomThreeHoursCollectionTableViewCell()}
             
             cell.collectionView?.delegate = self
             cell.collectionView?.dataSource = self
+            
+            cell.collectionView.tag = indexPath.row
+            //cell.collectionView?.backgroundColor = UIColor.init(red: 10, green: 10, blue: 10, alpha: 1)
+            
+            return cell
+        } else if indexPath.row == 3 {
+         
+            guard let cell: CustomWeekCollectionTableViewCell = tableView.dequeueReusableCell(withIdentifier: "weekTableCell", for: indexPath) as? CustomWeekCollectionTableViewCell else {return CustomWeekCollectionTableViewCell()}
+            
+            cell.collectionView?.delegate = self
+            cell.collectionView?.dataSource = self
+            
+            cell.collectionView.tag = indexPath.row
             //cell.collectionView?.backgroundColor = UIColor.init(red: 10, green: 10, blue: 10, alpha: 1)
             
             return cell
@@ -125,17 +142,19 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         //self.tableView.
-        if tableViewIndexPath == 1 {
+        if collectionView.tag == 1 {
             return testText.count
-        } else if tableViewIndexPath == 2 {
+        } else if collectionView.tag == 2 {
             return testHoursText.count
+        } else if collectionView.tag == 3 {
+            return 7
         } else {return 1}
         //return testText.count
         
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if tableViewIndexPath == 1 {
+        if collectionView.tag == 1 {
             guard let cell: CustomApparelCollectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: "apparelCell", for: indexPath) as? CustomApparelCollectionViewCell else {
                 return UICollectionViewCell()
             }
@@ -144,16 +163,35 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
             cell.apparelText.text = testText[indexPath.item]
             
             return  cell
-        } else if tableViewIndexPath == 2 {
+        } else if collectionView.tag == 2 {
+            //collectionView.register(CustomThreeHoursCollectionViewCell.self, forCellWithReuseIdentifier: "threeHoursCell")
             guard let cell: CustomThreeHoursCollectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: "threeHoursCell", for: indexPath) as? CustomThreeHoursCollectionViewCell else {
                 return CustomThreeHoursCollectionViewCell()
             }
+            
            //cell.contentView.backgroundColor = .clear
-            cell.commentText.text = testCommentText[indexPath.item]
+            cell.commentText.text = testCommentText[indexPath.item]!
             cell.dayText.text = testDayText[indexPath.item]
             //cell.apparalImage
             cell.hoursText.text = testHoursText[indexPath.item]
             cell.temperatureText.text = testTemText[indexPath.item]
+            cell.apparelImage.image = UIImage(named: "backgroundIMG")
+            //cell.apparelText.text = testText[indexPath.item]
+            
+            return cell
+        } else if collectionView.tag == 3 {
+            guard let cell: CustomWeekCollectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: "weekCollectionCell", for: indexPath) as? CustomWeekCollectionViewCell else {
+                return CustomWeekCollectionViewCell()
+            }
+            
+           //cell.contentView.backgroundColor = .clear
+            //cell.dayText.text = testCommentText[indexPath.item]
+            cell.dayText.text = testWeekText[indexPath.item]
+            //cell.apparalImage
+            cell.maxText.text = "최고"
+            cell.minText.text = "최저"
+            cell.maxTemperature.text = "20도"
+            cell.minTemperature.text = "10도"
             cell.apparelImage.image = UIImage(named: "backgroundIMG")
             //cell.apparelText.text = testText[indexPath.item]
             
