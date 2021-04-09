@@ -9,6 +9,7 @@ import UIKit
 
 class ViewController: UIViewController {
     
+    @IBOutlet weak var navigationBar: UINavigationBar!
     @IBAction func plusButton(_ sender: Any) {
         print("plusButton")
     }
@@ -29,15 +30,28 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         
+        
+        //presentAlert("알림", message: "test", completion: nil)
+
         self.tableView.dataSource = self
         self.tableView.delegate = self
         //self.view.collection
         //self.tableView.rowHeight = 200
         
-      
+        self.setNavigationTitle(titleText: "위치")
         self.setNavigationBar()
         self.view.addBackground()
-        
+        //navigationItem.title =
+    }
+    
+    //title 을 버튼형식으로 변경
+    func setNavigationTitle(titleText: String) {
+        let button =  UIButton(type: .custom)
+        button.frame = CGRect(x: 0, y: 0, width: 100, height: 40)
+        button.backgroundColor = .clear
+        button.setTitle(titleText, for: .normal)
+        button.addTarget(self, action: #selector(clickOnButton), for: .touchUpInside)
+        navigationItem.titleView = button
     }
 
     //네비게이션 바 투명하도록
@@ -46,6 +60,14 @@ class ViewController: UIViewController {
         bar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
             bar.shadowImage = UIImage()
         bar.backgroundColor = UIColor.clear
+    }
+    
+    @objc func clickOnButton() {
+        print("title Click")
+        let vcName = self.storyboard?.instantiateViewController(withIdentifier: "SearchViewController")
+        vcName?.modalTransitionStyle = .coverVertical
+        self.present(vcName!, animated: true, completion: nil)
+        
     }
 
 
@@ -186,6 +208,10 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
             
            //cell.contentView.backgroundColor = .clear
             //cell.dayText.text = testCommentText[indexPath.item]
+            //셀 모서리 굴곡
+            cell.layer.cornerRadius = 10;
+            //cell.layer.masksToBounds = YES;
+
             cell.dayText.text = testWeekText[indexPath.item]
             //cell.apparalImage
             cell.maxText.text = "최고"

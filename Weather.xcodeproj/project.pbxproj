@@ -21,6 +21,8 @@
 		E92718E0261DAC4C00EB0FBB /* CustomThreeHoursCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E92718DF261DAC4C00EB0FBB /* CustomThreeHoursCollectionViewCell.swift */; };
 		E92718E3261EF13100EB0FBB /* CustomWeekCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E92718E2261EF13100EB0FBB /* CustomWeekCollectionViewCell.swift */; };
 		E92718E6261EF1CB00EB0FBB /* CustomWeekCollectionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E92718E5261EF1CB00EB0FBB /* CustomWeekCollectionTableViewCell.swift */; };
+		E94E0918262027410025E141 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E94E0917262027410025E141 /* SearchViewController.swift */; };
+		E94E091D26205BAA0025E141 /* UIViewControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E94E091C26205BAA0025E141 /* UIViewControllerExtension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,6 +42,8 @@
 		E92718DF261DAC4C00EB0FBB /* CustomThreeHoursCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomThreeHoursCollectionViewCell.swift; sourceTree = "<group>"; };
 		E92718E2261EF13100EB0FBB /* CustomWeekCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomWeekCollectionViewCell.swift; sourceTree = "<group>"; };
 		E92718E5261EF1CB00EB0FBB /* CustomWeekCollectionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomWeekCollectionTableViewCell.swift; sourceTree = "<group>"; };
+		E94E0917262027410025E141 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
+		E94E091C26205BAA0025E141 /* UIViewControllerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewControllerExtension.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,6 +76,7 @@
 		E92718B7261B0AF800EB0FBB /* Weather */ = {
 			isa = PBXGroup;
 			children = (
+				E94E091B26205B3F0025E141 /* Utilities */,
 				E92718B8261B0AF800EB0FBB /* AppDelegate.swift */,
 				E92718BA261B0AF800EB0FBB /* SceneDelegate.swift */,
 				E92718BC261B0AF800EB0FBB /* ViewController.swift */,
@@ -87,8 +92,17 @@
 				E92718DF261DAC4C00EB0FBB /* CustomThreeHoursCollectionViewCell.swift */,
 				E92718E2261EF13100EB0FBB /* CustomWeekCollectionViewCell.swift */,
 				E92718E5261EF1CB00EB0FBB /* CustomWeekCollectionTableViewCell.swift */,
+				E94E0917262027410025E141 /* SearchViewController.swift */,
 			);
 			path = Weather;
+			sourceTree = "<group>";
+		};
+		E94E091B26205B3F0025E141 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				E94E091C26205BAA0025E141 /* UIViewControllerExtension.swift */,
+			);
+			path = Utilities;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -167,8 +181,10 @@
 				E92718DA261C75E200EB0FBB /* CustomCollectionViewTableViewCell.swift in Sources */,
 				E92718DD261DA2F800EB0FBB /* CustomThreeHoursCollectionTableViewCell.swift in Sources */,
 				E92718C3261B0AF800EB0FBB /* Weather.xcdatamodeld in Sources */,
+				E94E0918262027410025E141 /* SearchViewController.swift in Sources */,
 				E92718BD261B0AF800EB0FBB /* ViewController.swift in Sources */,
 				E92718E0261DAC4C00EB0FBB /* CustomThreeHoursCollectionViewCell.swift in Sources */,
+				E94E091D26205BAA0025E141 /* UIViewControllerExtension.swift in Sources */,
 				E92718E3261EF13100EB0FBB /* CustomWeekCollectionViewCell.swift in Sources */,
 				E92718B9261B0AF800EB0FBB /* AppDelegate.swift in Sources */,
 				E92718BB261B0AF800EB0FBB /* SceneDelegate.swift in Sources */,
