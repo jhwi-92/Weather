@@ -9,6 +9,8 @@ import UIKit
 
 class ViewController: UIViewController {
     
+  
+
     @IBOutlet weak var navigationBar: UINavigationBar!
     @IBAction func plusButton(_ sender: Any) {
         print("plusButton")
@@ -25,12 +27,15 @@ class ViewController: UIViewController {
     let testTemText:[String?] = ["11C","9C","6C","4C","10C","15C","16C","14C"]
     let testCommentText:[String?] = ["맑아요","흐려요","흐려요","흐려요","흐려요","맑아요","맑아요","맑아요"]
     let testWeekText:[String?] = ["일요일", "월요일", "화요일", "수요일", "목요일", "금요일", "토요일"]
+    var weatherResponse: response?
     override func viewDidLoad() {
         
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        
-        
+//        let url = String(format: "https://api.darksky.net/forecast//%lf,%lf?lang=ko", 12.333, 154.44)
+//
+//        print("11")
+//        print(url)
         //presentAlert("알림", message: "test", completion: nil)
 
         self.tableView.dataSource = self
@@ -62,11 +67,13 @@ class ViewController: UIViewController {
         bar.backgroundColor = UIColor.clear
     }
     
+    
     @objc func clickOnButton() {
         print("title Click")
-        let vcName = self.storyboard?.instantiateViewController(withIdentifier: "SearchViewController")
-        vcName?.modalTransitionStyle = .coverVertical
-        self.present(vcName!, animated: true, completion: nil)
+        guard let vcName = self.storyboard?.instantiateViewController(withIdentifier: "SearchViewController") as? SearchViewController else {return}
+        vcName.modalTransitionStyle = .coverVertical
+        vcName.delegate = self
+        self.present(vcName, animated: true, completion: nil)
         
     }
 
@@ -259,4 +266,63 @@ extension ViewController: UICollectionViewDelegateFlowLayout {
 //
 //        return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
 //    }
+}
+
+extension ViewController: SearchViewDelegate {
+    func sendData(data: Map) {
+
+        print("vc")
+        print(data.latitude)
+        print(data.longitude)
+        print(data.name)
+        print(data.world)
+        setNavigationTitle(titleText: data.name)
+        let serviceKey = "dP56BeIkDFP%2Bpu3BL%2FBmJMGAzYIosy%2BBxZTykiTGKFxqT6%2FR7WPOAlHS4xzUhY1f7zdgU6HHkeX6iYl4aL8Wng%3D%3D"
+        let baseDate = "20210414"
+        let baseTime = "1600"
+        
+
+        //Network.request(urlPath: urlStr, completion: <#T##(Network.NetworkResult) -> ()#>)
+        var gridXY = ConvertGrid.convertGRID_GPS(mode: "TO_GRID", lat_X: data.latitude, lng_Y: data.longitude)
+        
+        let urlStr = String( "http://apis.data.go.kr/1360000/VilageFcstInfoService/getUltraSrtNcst?" + "serviceKey=" + serviceKey + "&base_date=" + baseDate + "&base_time=" + baseTime + "&nx=" + String(gridXY.x) + "&ny=" + String(gridXY.y) + "&dataType=JSON")
+        
+        print("urlStr")
+        print(urlStr)
+        //let url = "http://apis.data.go.kr/1360000/VilageFcstInfoService/getUltraSrtNcst?"
+        
+        
+        Network.request(urlPath: urlStr) { [weak self] result in
+                    guard let self = self else { return }
+            switch result {
+            case .success(let data):
+                print(data)
+                do {
+                    let apiResponse: response = try JSONDecoder().decode(response.self, from: data)
+                    self.weatherResponse = apiResponse
+                    print(self.weatherResponse)
+                } catch(let err) {
+                    print(err)
+                }
+                        //self.jsonParser.delegate = self
+                        //self.jsonParser.startParsing(data: data, parsingType: .detail, conciseCity: self.city)
+            case .failed(let error):
+                        print(error)
+//                        if let data = UserDefaults.standard.value(forKey: self.city.name) as? Data {
+//                            if let city = try? PropertyListDecoder().decode(DetailCity.self, from: data) {
+//                                self.detailCity = city
+//                                DispatchQueue.main.async { [weak self] in
+//                                    self?.weatherDetailTableView.reloadData()
+//                                }
+//                            }
+//                        } else {
+//                            self.presentAlert(error.localizedDescription, message: "\(error.code)", completion: nil)
+//                        }
+                    }
+                }
+        
+
+       }
+
+
 }

@@ -8,9 +8,14 @@
 import UIKit
 import MapKit
 
+protocol SearchViewDelegate {
+    func sendData(data: Map)
+}
+
+
 class SearchViewController: UIViewController {
 
-    
+    var delegate: SearchViewDelegate?
     static let identifier = "SearchViewController"
     private let searchTableCellIdentifier = "searchResultCell"
     private var searchCompleter = MKLocalSearchCompleter()
@@ -132,6 +137,19 @@ extension SearchViewController: UITableViewDelegate {
 //            let coordinate = Coordinate(coordinate: placeMark.coordinate)
             
             //self.delegate?.userAdd(newLocation: Location(coordinate: coordinate, name: "\(placeMark.locality ?? selectedResult.title)"))
+            //delegate?.sendData(data: placeMark)
+            
+            let data = Map()
+            data.latitude = placeMark.coordinate.latitude
+            data.longitude = placeMark.coordinate.longitude
+            data.name = placeMark.title!
+            data.world = placeMark.countryCode!
+            //administrativeArea: 시
+            //locality: 구
+            //thorughfare: 동
+            data.name = CLPlacemark.init(placemark: placeMark).thoroughfare!
+            self.delegate?.sendData(data: data)
+            
             self.dismiss(animated: true, completion: nil)
         }
     }
