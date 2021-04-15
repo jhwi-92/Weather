@@ -91,6 +91,15 @@ struct ConvertGrid {
         
         
     }
+    
+    static func temSearch(type: String, data: [info]) -> String{
+        if let i = data.firstIndex(where: { $0.category == type }) {
+            let tem = data[i].obsrValue
+            print("get the \(tem)")
+            return tem
+        }
+        return "error"
+    }
 
     struct LatXLngY {
         public var lat: Double

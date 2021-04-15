@@ -28,6 +28,7 @@
 		E94E09262626B2CD0025E141 /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = E94E09252626B2CD0025E141 /* Network.swift */; };
 		E94E09292626D7B20025E141 /* ConvertGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = E94E09282626D7B20025E141 /* ConvertGrid.swift */; };
 		E94E092C2626DB380025E141 /* APIResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E94E092B2626DB380025E141 /* APIResponse.swift */; };
+		E94E092F262845CA0025E141 /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E94E092E262845CA0025E141 /* DateExtension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -54,6 +55,7 @@
 		E94E09252626B2CD0025E141 /* Network.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
 		E94E09282626D7B20025E141 /* ConvertGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConvertGrid.swift; sourceTree = "<group>"; };
 		E94E092B2626DB380025E141 /* APIResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIResponse.swift; sourceTree = "<group>"; };
+		E94E092E262845CA0025E141 /* DateExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtension.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -116,6 +118,7 @@
 			isa = PBXGroup;
 			children = (
 				E94E091C26205BAA0025E141 /* UIViewControllerExtension.swift */,
+				E94E092E262845CA0025E141 /* DateExtension.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -195,6 +198,7 @@
 				E94E09262626B2CD0025E141 /* Network.swift in Sources */,
 				E92718D7261C6E5400EB0FBB /* CustomApparelCollectionViewCell.swift in Sources */,
 				E92718DA261C75E200EB0FBB /* CustomCollectionViewTableViewCell.swift in Sources */,
+				E94E092F262845CA0025E141 /* DateExtension.swift in Sources */,
 				E92718DD261DA2F800EB0FBB /* CustomThreeHoursCollectionTableViewCell.swift in Sources */,
 				E92718C3261B0AF800EB0FBB /* Weather.xcdatamodeld in Sources */,
 				E94E0918262027410025E141 /* SearchViewController.swift in Sources */,

@@ -76,6 +76,10 @@ class ViewController: UIViewController {
         self.present(vcName, animated: true, completion: nil)
         
     }
+    
+    func setTemData() {
+        
+    }
 
 
 }
@@ -118,12 +122,18 @@ extension ViewController: UITableViewDataSource {
         if indexPath.row == 0 {
             
             guard let cell: CustomTodayTableViewCell = tableView.dequeueReusableCell(withIdentifier: "todayCell", for: indexPath) as? CustomTodayTableViewCell else {return CustomTodayTableViewCell()}
-            cell.averageText.text = "평균"
-            cell.todayText.text = "4월 6일 16시"
-            cell.temperature.text = "20"
-            cell.comment.text = "오늘은 흐린날이에요... 가디건 추천드려요"
-            cell.temperatureSymbol.text = "oC"
-            
+            //guard self.weatherResponse? != nil as? CustomTodayTableViewCell else {return CustomTodayTableViewCell()}
+            //guard let nilCheck = self.weatherResponse else {return }
+            if self.weatherResponse != nil {
+                let tem = ConvertGrid.temSearch(type: "T1H", data: (self.weatherResponse?.response.body.items.item)!)
+                print("tem")
+                print(tem)
+                cell.averageText.text = "현재"
+                cell.todayText.text = Date().toDateString(dateFormat: "M월 d일 HH시")
+                cell.temperature.text = tem
+                cell.comment.text = "오늘은 흐린날이에요... 가디건 추천드려요"
+                cell.temperatureSymbol.text = "oC"
+            }
             return cell
         } else if indexPath.row == 1 {
   
@@ -278,8 +288,9 @@ extension ViewController: SearchViewDelegate {
         print(data.world)
         setNavigationTitle(titleText: data.name)
         let serviceKey = "dP56BeIkDFP%2Bpu3BL%2FBmJMGAzYIosy%2BBxZTykiTGKFxqT6%2FR7WPOAlHS4xzUhY1f7zdgU6HHkeX6iYl4aL8Wng%3D%3D"
-        let baseDate = "20210414"
-        let baseTime = "1600"
+        let baseDate = Date().toDateString(dateFormat: "yyyyMMdd")
+        
+        let baseTime = Date().toTimeString(timeFormat: "HH") + "00"
         
 
         //Network.request(urlPath: urlStr, completion: <#T##(Network.NetworkResult) -> ()#>)
@@ -301,6 +312,13 @@ extension ViewController: SearchViewDelegate {
                     let apiResponse: response = try JSONDecoder().decode(response.self, from: data)
                     self.weatherResponse = apiResponse
                     print(self.weatherResponse)
+                    let tem = ConvertGrid.temSearch(type: "T1H", data: (self.weatherResponse?.response.body.items.item)!)
+                    print("tem")
+                    print(tem)
+                    OperationQueue.main.addOperation {
+                        self.tableView.reloadData()
+                    }
+                    //self.tableView.reloadData()
                 } catch(let err) {
                     print(err)
                 }
