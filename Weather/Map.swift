@@ -7,18 +7,11 @@
 
 import Foundation
 
-class Map {
-    var world: String
-    var name: String
-    var latitude: Double
-    var longitude: Double
-    
-    init() {
-        world = String()
-        name = String()
-        latitude = Double()
-        longitude = Double()
-    }
+struct Map {
+    //var world: String
+    public var name: String
+    public var latitude: Double
+    public var longitude: Double
     
 }
 

@@ -14,7 +14,6 @@ protocol SearchViewDelegate {
 
 
 class SearchViewController: UIViewController {
-
     var delegate: SearchViewDelegate?
     static let identifier = "SearchViewController"
     private let searchTableCellIdentifier = "searchResultCell"
@@ -129,9 +128,7 @@ extension SearchViewController: UITableViewDelegate {
             
             
             
-            //MKCoordinateRegion(
-            //MKCoordinateRegion(
-            //MKCoordinateRegion(placeMark.region!)
+          
             
             //self.delegate?
 //            let coordinate = Coordinate(coordinate: placeMark.coordinate)
@@ -139,16 +136,22 @@ extension SearchViewController: UITableViewDelegate {
             //self.delegate?.userAdd(newLocation: Location(coordinate: coordinate, name: "\(placeMark.locality ?? selectedResult.title)"))
             //delegate?.sendData(data: placeMark)
             
-            let data = Map()
-            data.latitude = placeMark.coordinate.latitude
-            data.longitude = placeMark.coordinate.longitude
-            data.name = placeMark.title!
-            data.world = placeMark.countryCode!
+            //data.world = placeMark.countryCode!
             //administrativeArea: 시
             //locality: 구
             //thorughfare: 동
-            data.name = CLPlacemark.init(placemark: placeMark).thoroughfare!
-            self.delegate?.sendData(data: data)
+            
+            let data = Map(name: CLPlacemark.init(placemark: placeMark).thoroughfare!, latitude: placeMark.coordinate.latitude, longitude: placeMark.coordinate.longitude)
+            
+            print("1")
+            print(CLPlacemark.init(placemark: placeMark).thoroughfare)
+            
+            //test.name = CLPlacemark.init(placemark: placeMark).thoroughfare!
+            //test.longitude = placeMark.coordinate.longitude
+            //test.latitude = placeMark.coordinate.latitude
+            //test.latitude = 1.11
+            DataManager.shared.addNewCity(data)
+            //self.delegate?.sendData(data: data)
             
             self.dismiss(animated: true, completion: nil)
         }

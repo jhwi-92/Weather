@@ -20,7 +20,8 @@ class ViewController: UIViewController {
         print("menuButton")
     }
     @IBOutlet var tableView: UITableView!
-    
+    var map: Map?
+    //var city: City? = nil
     let testText:[String?] = ["트렌치코트","잠바","패딩","아아","어어"]
     let testDayText:[String?] = ["04/07","04/08","04/08","04/08","04/08","04/08","04/08","04/08"]
     let testHoursText:[String?] = ["21시","00시","03시","06시","09시","12시","15시","18시"]
@@ -31,6 +32,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         
         super.viewDidLoad()
+        //DataManager.shared.fetchCity()
         // Do any additional setup after loading the view.
 //        let url = String(format: "https://api.darksky.net/forecast//%lf,%lf?lang=ko", 12.333, 154.44)
 //
@@ -47,6 +49,24 @@ class ViewController: UIViewController {
         self.setNavigationBar()
         self.view.addBackground()
         //navigationItem.title =
+    }
+    
+    //화면에 표시되기 직전 표시(목록 업데이트 등)
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        DataManager.shared.fetchCity()
+        print(DataManager.shared.cityList)
+        guard let city: City = DataManager.shared.cityList.first else {
+            return
+        }
+        
+        let map = Map(name: city.name!, latitude: city.latitude, longitude: city.longitude)
+        sendData(data: map)
+        
+        //배열에 저장된 데이터로 데이터 호출
+        //tableView.reloadData()
+
     }
     
     //title 을 버튼형식으로 변경
@@ -132,7 +152,7 @@ extension ViewController: UITableViewDataSource {
                 cell.todayText.text = Date().toDateString(dateFormat: "M월 d일 HH시")
                 cell.temperature.text = tem
                 cell.comment.text = "오늘은 흐린날이에요... 가디건 추천드려요"
-                cell.temperatureSymbol.text = "oC"
+                cell.temperatureSymbol.text = "℃"
             }
             return cell
         } else if indexPath.row == 1 {
@@ -285,7 +305,6 @@ extension ViewController: SearchViewDelegate {
         print(data.latitude)
         print(data.longitude)
         print(data.name)
-        print(data.world)
         setNavigationTitle(titleText: data.name)
         let serviceKey = "dP56BeIkDFP%2Bpu3BL%2FBmJMGAzYIosy%2BBxZTykiTGKFxqT6%2FR7WPOAlHS4xzUhY1f7zdgU6HHkeX6iYl4aL8Wng%3D%3D"
         let baseDate = Date().toDateString(dateFormat: "yyyyMMdd")
@@ -294,9 +313,9 @@ extension ViewController: SearchViewDelegate {
         
 
         //Network.request(urlPath: urlStr, completion: <#T##(Network.NetworkResult) -> ()#>)
-        var gridXY = ConvertGrid.convertGRID_GPS(mode: "TO_GRID", lat_X: data.latitude, lng_Y: data.longitude)
+        let gridXY = ConvertGrid.convertGRID_GPS(mode: "TO_GRID", lat_X: data.latitude, lng_Y: data.longitude)
         
-        let urlStr = String( "http://apis.data.go.kr/1360000/VilageFcstInfoService/getUltraSrtNcst?" + "serviceKey=" + serviceKey + "&base_date=" + baseDate + "&base_time=" + baseTime + "&nx=" + String(gridXY.x) + "&ny=" + String(gridXY.y) + "&dataType=JSON")
+        let urlStr = String( "http://apis.data.go.kr/1360000/VilageFcstInfoService/getUltraSrtNcst" + "?serviceKey=" + serviceKey + "&base_date=" + baseDate + "&base_time=" + baseTime + "&nx=" + String(gridXY.x) + "&ny=" + String(gridXY.y) + "&dataType=JSON")
         
         print("urlStr")
         print(urlStr)
