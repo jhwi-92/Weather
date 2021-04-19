@@ -28,7 +28,8 @@ class ViewController: UIViewController {
     let testTemText:[String?] = ["11C","9C","6C","4C","10C","15C","16C","14C"]
     let testCommentText:[String?] = ["맑아요","흐려요","흐려요","흐려요","흐려요","맑아요","맑아요","맑아요"]
     let testWeekText:[String?] = ["일요일", "월요일", "화요일", "수요일", "목요일", "금요일", "토요일"]
-    var weatherResponse: response?
+    var nowWeatherResponse: NowResponse?
+    var townWeatherResponse: TownResponse?
     override func viewDidLoad() {
         
         super.viewDidLoad()
@@ -62,10 +63,15 @@ class ViewController: UIViewController {
         }
         
         let map = Map(name: city.name!, latitude: city.latitude, longitude: city.longitude)
-        sendData(data: map)
+        //초단기실황(현재기온)getUltraSrtNcst
+        sendData(data: map, type: "getUltraSrtNcst")
+        
+        //동네예보(오늘 하늘상태 및 3시간 간격 기온)getVilageFcst
+        sendData(data: map, type: "getVilageFcst")
+        
         
         //배열에 저장된 데이터로 데이터 호출
-        //tableView.reloadData()
+        tableView.reloadData()
 
     }
     
@@ -144,14 +150,15 @@ extension ViewController: UITableViewDataSource {
             guard let cell: CustomTodayTableViewCell = tableView.dequeueReusableCell(withIdentifier: "todayCell", for: indexPath) as? CustomTodayTableViewCell else {return CustomTodayTableViewCell()}
             //guard self.weatherResponse? != nil as? CustomTodayTableViewCell else {return CustomTodayTableViewCell()}
             //guard let nilCheck = self.weatherResponse else {return }
-            if self.weatherResponse != nil {
-                let tem = ConvertGrid.temSearch(type: "T1H", data: (self.weatherResponse?.response.body.items.item)!)
+            if self.nowWeatherResponse != nil {
+                let tem = ConvertGrid.nowSearch(type: "T1H", data: (self.nowWeatherResponse?.response.body.items.item)!)
                 print("tem")
                 print(tem)
+                print(self.townWeatherResponse?.response.body.items.item[3].skyState)
                 cell.averageText.text = "현재"
                 cell.todayText.text = Date().toDateString(dateFormat: "M월 d일 HH시")
                 cell.temperature.text = tem
-                cell.comment.text = "오늘은 흐린날이에요... 가디건 추천드려요"
+                cell.comment.text = self.townWeatherResponse?.response.body.items.item[3].skyState
                 cell.temperatureSymbol.text = "℃"
             }
             return cell
@@ -299,26 +306,42 @@ extension ViewController: UICollectionViewDelegateFlowLayout {
 }
 
 extension ViewController: SearchViewDelegate {
-    func sendData(data: Map) {
+    func sendData(data: Map, type: String) {
+        
+        let serviceKey = "dP56BeIkDFP%2Bpu3BL%2FBmJMGAzYIosy%2BBxZTykiTGKFxqT6%2FR7WPOAlHS4xzUhY1f7zdgU6HHkeX6iYl4aL8Wng%3D%3D"
+        let baseDate = Date().toDateString(dateFormat: "yyyyMMdd")
+        
+        var baseTime: String
+        var urlStr: String
+        let gridXY = ConvertGrid.convertGRID_GPS(mode: "TO_GRID", lat_X: data.latitude, lng_Y: data.longitude)
+        //초단기예보
+        if type == "getUltraSrtNcst" {
+            baseTime = Date().toTimeString(timeFormat: "HH", type: type) + "00"
+            urlStr = String( "http://apis.data.go.kr/1360000/VilageFcstInfoService/" + type +  "?serviceKey=" + serviceKey + "&base_date=" + baseDate + "&base_time=" + baseTime + "&nx=" + String(gridXY.x) + "&ny=" + String(gridXY.y) + "&dataType=JSON")
+            
+            print("urlStr")
+            print(urlStr)
+            
+        } else {
+            //동네예보 getVilageFcst
+            baseTime = Date().toTimeString(timeFormat: "HH", type: type) + "00"
+            urlStr = String( "http://apis.data.go.kr/1360000/VilageFcstInfoService/" + type +  "?serviceKey=" + serviceKey + "&base_date=" + baseDate + "&base_time=" + baseTime + "&nx=" + String(gridXY.x) + "&ny=" + String(gridXY.y) + "&dataType=JSON&pageNo=1&numOfRows=195")
+            
+            print("urlStr")
+            print(urlStr)
+        }
 
         print("vc")
         print(data.latitude)
         print(data.longitude)
         print(data.name)
         setNavigationTitle(titleText: data.name)
-        let serviceKey = "dP56BeIkDFP%2Bpu3BL%2FBmJMGAzYIosy%2BBxZTykiTGKFxqT6%2FR7WPOAlHS4xzUhY1f7zdgU6HHkeX6iYl4aL8Wng%3D%3D"
-        let baseDate = Date().toDateString(dateFormat: "yyyyMMdd")
         
-        let baseTime = Date().toTimeString(timeFormat: "HH") + "00"
         
 
-        //Network.request(urlPath: urlStr, completion: <#T##(Network.NetworkResult) -> ()#>)
-        let gridXY = ConvertGrid.convertGRID_GPS(mode: "TO_GRID", lat_X: data.latitude, lng_Y: data.longitude)
         
-        let urlStr = String( "http://apis.data.go.kr/1360000/VilageFcstInfoService/getUltraSrtNcst" + "?serviceKey=" + serviceKey + "&base_date=" + baseDate + "&base_time=" + baseTime + "&nx=" + String(gridXY.x) + "&ny=" + String(gridXY.y) + "&dataType=JSON")
         
-        print("urlStr")
-        print(urlStr)
+        
         //let url = "http://apis.data.go.kr/1360000/VilageFcstInfoService/getUltraSrtNcst?"
         
         
@@ -328,12 +351,22 @@ extension ViewController: SearchViewDelegate {
             case .success(let data):
                 print(data)
                 do {
-                    let apiResponse: response = try JSONDecoder().decode(response.self, from: data)
-                    self.weatherResponse = apiResponse
-                    print(self.weatherResponse)
-                    let tem = ConvertGrid.temSearch(type: "T1H", data: (self.weatherResponse?.response.body.items.item)!)
-                    print("tem")
-                    print(tem)
+                    if type == "getUltraSrtNcst" {
+                        let apiResponse: NowResponse = try JSONDecoder().decode(NowResponse.self, from: data)
+                        self.nowWeatherResponse = apiResponse
+                        print(self.nowWeatherResponse)
+                        let tem = ConvertGrid.nowSearch(type: "T1H", data: (self.nowWeatherResponse?.response.body.items.item)!)
+                        print("tem")
+                        print(tem)
+                    } else if type == "getVilageFcst" {
+                        let apiResponse: TownResponse = try JSONDecoder().decode(TownResponse.self, from: data)
+                        self.townWeatherResponse = apiResponse
+                        print(self.townWeatherResponse)
+                        let sky = ConvertGrid.townSearch(type: "SKY", data: (self.townWeatherResponse?.response.body.items.item)!)
+                        print("sky")
+                        print(sky)
+                    }
+                    
                     OperationQueue.main.addOperation {
                         self.tableView.reloadData()
                     }

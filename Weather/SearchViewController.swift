@@ -9,7 +9,7 @@ import UIKit
 import MapKit
 
 protocol SearchViewDelegate {
-    func sendData(data: Map)
+    func sendData(data: Map, type: String)
 }
 
 

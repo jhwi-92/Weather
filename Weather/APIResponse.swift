@@ -7,37 +7,35 @@
 
 import Foundation
 
-struct APIWeatherResponse: Codable {
-    let weatherResponse: response
+struct APIWeatherNowResponse: Codable {
+    let nowWeatherResponse: NowResponse
+}
+struct APIWeatherTownResponse: Codable {
+    let townWeatherResponse: TownResponse
 }
 
-struct response: Codable {
-    let response: responseData
+struct NowResponse: Codable {
+    let response: NowData
 }
-struct responseData: Codable {
+struct TownResponse: Codable {
+    let response: TownData
+}
+struct NowData: Codable {
 //    struct Movie: Codable {
         let header: Header
-        let body: Body
+        let body: NowBody
         
     enum CodingKeys: String, CodingKey {
         case header, body
     }
-//        var full: String {
-//            return "평점 : " + String(self.userRating) + " 예매순위 : " + String(self.reservationGrade) + " 예매율 : " + String(self.reservationRate)
-//        }
-//
-//        var gradeRatingRate: String {
-//            return "\(self.reservationGrade)위(\(self.userRating)) / \(self.reservationRate)%"
-//        }
-//
-//        var ageImageName: String {
-//            switch grade {
-//            case 12, 15, 19:
-//                return "ic_"+String(grade)
-//            default:
-//                return "ic_allages"
-//            }
-//        }
+}
+struct TownData: Codable {
+    let header: Header
+    let body: TownBody
+    
+    enum CodingKeys: String, CodingKey {
+        case header, body
+    }
 }
 
 struct Header: Codable {
@@ -45,19 +43,19 @@ struct Header: Codable {
     let resultMsg: String
 }
 
-struct Body: Codable {
+struct NowBody: Codable {
     let dataType: String
-    let items: Item
+    let items: NowItem
     let pageNo: Int
     let numOfRows: Int
     let totalCount: Int
 }
 
-struct Item: Codable {
-    let item: [info]
+struct NowItem: Codable {
+    let item: [NowInfo]
 }
 
-struct info: Codable {
+struct NowInfo: Codable {
     let baseDate: String
     let baseTime: String
     let category: String
@@ -66,3 +64,43 @@ struct info: Codable {
     let obsrValue: String
 }
  
+struct TownBody: Codable {
+    let dataType: String
+    let items: TownItem
+    let pageNo: Int
+    let numOfRows: Int
+    let totalCount: Int
+}
+
+struct TownItem: Codable {
+    let item: [TownInfo]
+}
+
+struct TownInfo: Codable {
+    let baseDate: String
+    let baseTime: String
+    let category: String
+    let fcstDate: String
+    let fcstTime: String
+    let fcstValue: String
+    let nx: Int
+    let ny: Int
+    
+    var skyState: String {
+        var state: String = ""
+        if category == "SKY" {
+            switch Int(fcstValue)! {
+            case 0...5:
+                state = "오늘은 맑아요! 산책 쌉가능"
+                //return
+            case 6...8:
+                state = "구름이 많아요! 산책 가능"
+            default:
+                state = "하늘이 흐려요! ㅜㅜ"
+            }
+        }
+        return state
+    }
+    
+}
+

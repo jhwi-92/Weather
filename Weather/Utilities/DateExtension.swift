@@ -19,19 +19,35 @@ extension Date {
     }
     //기상청 api가 현재시간 30분이 지나야 api생성됨.
     //30분 전 현재시간 -1 api조회
-    func toTimeString(timeFormat format: String) -> String {
+    func toTimeString(timeFormat format: String, type: String) -> String {
+        let standardTime = [02, 05, 08, 11, 14, 17, 20, 23]
         let minTimeFormatter = DateFormatter()
         minTimeFormatter.dateFormat = "mm"
         minTimeFormatter.locale = Locale(identifier: "Ko_kr")
-        let min = minTimeFormatter.string(from: self)
-        
         let hourTimeFormatter = DateFormatter()
         hourTimeFormatter.dateFormat = format
         hourTimeFormatter.locale = Locale(identifier: "Ko_kr")
+        let min = minTimeFormatter.string(from: self)
         var hour = hourTimeFormatter.string(from: self)
-        if Int(min)! < 30 {
-            hour = String(Int(hour)! - 1)
+        if type == "getUltraSrtNcst" {
+            if Int(min)! < 30 {
+                hour = String(Int(hour)! - 1)
+            }
+            //return hour
+        } else if type == "getVilageFcst" {
+            //0200, 0500, 0800, 1100, 1400, 1700, 2000, 2300
+            //기상청 api가 해당시간 10분이 지나야 api생성됨.
+            if Int(min)! < 10 {
+                hour = String(Int(hour)! - 1)
+            }
+            
+            var time = standardTime.filter({$0 <= Int(hour)!})
+            
+            hour = String(time.last!)
+            print(time)
+            //return hour
         }
+        
         return hour
     }
 }

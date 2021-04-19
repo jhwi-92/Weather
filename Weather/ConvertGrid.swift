@@ -92,11 +92,20 @@ struct ConvertGrid {
         
     }
     
-    static func temSearch(type: String, data: [info]) -> String{
+    static func nowSearch(type: String, data: [NowInfo]) -> String{
         if let i = data.firstIndex(where: { $0.category == type }) {
             let tem = data[i].obsrValue
             print("get the \(tem)")
             return tem
+        }
+        return "error"
+    }
+    
+    static func townSearch(type: String, data: [TownInfo]) -> String{
+        if let i = data.firstIndex(where: { $0.category == type }) {
+            let result = data[i].fcstValue
+            print("get the \(result)")
+            return result
         }
         return "error"
     }
