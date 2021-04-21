@@ -154,11 +154,11 @@ extension ViewController: UITableViewDataSource {
                 let tem = ConvertGrid.nowSearch(type: "T1H", data: (self.nowWeatherResponse?.response.body.items.item)!)
                 print("tem")
                 print(tem)
-                print(self.townWeatherResponse?.response.body.items.item[3].skyState)
+                print(self.townWeatherResponse?.response.body.items.item[3].skyStateComment)
                 cell.averageText.text = "현재"
                 cell.todayText.text = Date().toDateString(dateFormat: "M월 d일 HH시")
                 cell.temperature.text = tem
-                cell.comment.text = self.townWeatherResponse?.response.body.items.item[3].skyState
+                cell.comment.text = self.townWeatherResponse?.response.body.items.SKY[0].skyStateComment
                 cell.temperatureSymbol.text = "℃"
             }
             return cell
@@ -211,9 +211,13 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
         if collectionView.tag == 1 {
             return testText.count
         } else if collectionView.tag == 2 {
-            return testHoursText.count
+            guard let count: Int = self.townWeatherResponse?.response.body.items.T3H.count else {return 0}
+            return count
         } else if collectionView.tag == 3 {
-            return 7
+            guard let tmnCount: Int = self.townWeatherResponse?.response.body.items.TMN.count else {return 0}
+            
+            let count: Int = tmnCount + 0
+            return count
         } else {return 1}
         //return testText.count
         
@@ -234,13 +238,14 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
             guard let cell: CustomThreeHoursCollectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: "threeHoursCell", for: indexPath) as? CustomThreeHoursCollectionViewCell else {
                 return CustomThreeHoursCollectionViewCell()
             }
+            var sky = self.townWeatherResponse?.response.body.items.SKY
+            var t3h = self.townWeatherResponse?.response.body.items.T3H
             
            //cell.contentView.backgroundColor = .clear
-            cell.commentText.text = testCommentText[indexPath.item]!
-            cell.dayText.text = testDayText[indexPath.item]
-            //cell.apparalImage
-            cell.hoursText.text = testHoursText[indexPath.item]
-            cell.temperatureText.text = testTemText[indexPath.item]
+            cell.commentText.text = sky?[indexPath.item].skyState
+            cell.dayText.text = t3h?[indexPath.item].fcstDateSubStr
+            cell.hoursText.text = t3h?[indexPath.item].fcstTimeSubStr
+            cell.temperatureText.text = t3h?[indexPath.item].fcstValue
             cell.apparelImage.image = UIImage(named: "backgroundIMG")
             //cell.apparelText.text = testText[indexPath.item]
             
@@ -249,7 +254,10 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
             guard let cell: CustomWeekCollectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: "weekCollectionCell", for: indexPath) as? CustomWeekCollectionViewCell else {
                 return CustomWeekCollectionViewCell()
             }
-            
+            //최저
+            var tmn = self.townWeatherResponse?.response.body.items.TMN
+            //최고
+            var tmx = self.townWeatherResponse?.response.body.items.TMX
            //cell.contentView.backgroundColor = .clear
             //cell.dayText.text = testCommentText[indexPath.item]
             //셀 모서리 굴곡
@@ -260,8 +268,8 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
             //cell.apparalImage
             cell.maxText.text = "최고"
             cell.minText.text = "최저"
-            cell.maxTemperature.text = "20도"
-            cell.minTemperature.text = "10도"
+            cell.maxTemperature.text = tmx?[indexPath.item].fcstValue
+            cell.minTemperature.text = tmn?[indexPath.item].fcstValue
             cell.apparelImage.image = UIImage(named: "backgroundIMG")
             //cell.apparelText.text = testText[indexPath.item]
             

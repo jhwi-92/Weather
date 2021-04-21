@@ -74,6 +74,49 @@ struct TownBody: Codable {
 
 struct TownItem: Codable {
     let item: [TownInfo]
+    
+    var SKY: [TownInfo] {
+        var skyData: [TownInfo] = []
+        for i in item {
+            if i.category == "SKY" {
+                    //t3hData.insert(i, at: 0)
+                skyData.append(i)
+            }
+        }
+        return skyData
+    }
+    
+    var T3H: [TownInfo] {
+        var t3hData: [TownInfo] = []
+        for i in item {
+            if i.category == "T3H" {
+                    //t3hData.insert(i, at: 0)
+                    t3hData.append(i)
+            }
+        }
+        return t3hData
+    }
+    
+    var TMN: [TownInfo] {
+        var tmnData: [TownInfo] = []
+        for i in item {
+            if i.category == "TMN" {
+                    //t3hData.insert(i, at: 0)
+                tmnData.append(i)
+            }
+        }
+        return tmnData
+    }
+    
+    var TMX: [TownInfo] {
+        var tmxData: [TownInfo] = []
+        for i in item {
+            if i.category == "TMX" {
+                tmxData.append(i)
+            }
+        }
+        return tmxData
+    }
 }
 
 struct TownInfo: Codable {
@@ -86,7 +129,7 @@ struct TownInfo: Codable {
     let nx: Int
     let ny: Int
     
-    var skyState: String {
+    var skyStateComment: String {
         var state: String = ""
         if category == "SKY" {
             switch Int(fcstValue)! {
@@ -100,6 +143,39 @@ struct TownInfo: Codable {
             }
         }
         return state
+    }
+    
+    var skyState: String {
+        var state: String = ""
+        if category == "SKY" {
+            switch Int(fcstValue)! {
+            case 0...5:
+                state = "맑음"
+                //return
+            case 6...8:
+                state = "조금 흐림"
+            default:
+                state = "흐림"
+            }
+        }
+        return state
+    }
+    
+    var fcstDateSubStr: String {
+        var firstIdx: String.Index = fcstDate.index(fcstDate.startIndex, offsetBy: 4)
+        var endIdx: String.Index = fcstDate.index(fcstTime.startIndex, offsetBy: 6)
+        let mon = String(fcstDate[firstIdx..<endIdx])
+        firstIdx = fcstDate.index(fcstDate.startIndex, offsetBy: 6)
+        endIdx = fcstDate.index(fcstDate.startIndex, offsetBy: 8)
+        let day = String(fcstDate[firstIdx..<endIdx])
+        
+        return mon+"/"+day
+    }
+    var fcstTimeSubStr: String {
+        let endIdx: String.Index = fcstTime.index(fcstTime.startIndex, offsetBy: 2)
+
+        var result = String(fcstTime[..<endIdx])
+        return result+"시"
     }
     
 }
