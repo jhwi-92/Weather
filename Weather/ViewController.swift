@@ -23,11 +23,10 @@ class ViewController: UIViewController {
     var map: Map?
     //var city: City? = nil
     let testText:[String?] = ["트렌치코트","잠바","패딩","아아","어어"]
-    let testDayText:[String?] = ["04/07","04/08","04/08","04/08","04/08","04/08","04/08","04/08"]
-    let testHoursText:[String?] = ["21시","00시","03시","06시","09시","12시","15시","18시"]
-    let testTemText:[String?] = ["11C","9C","6C","4C","10C","15C","16C","14C"]
-    let testCommentText:[String?] = ["맑아요","흐려요","흐려요","흐려요","흐려요","맑아요","맑아요","맑아요"]
-    let testWeekText:[String?] = ["일요일", "월요일", "화요일", "수요일", "목요일", "금요일", "토요일"]
+    //동네예보
+    let serviceKey = "dP56BeIkDFP%2Bpu3BL%2FBmJMGAzYIosy%2BBxZTykiTGKFxqT6%2FR7WPOAlHS4xzUhY1f7zdgU6HHkeX6iYl4aL8Wng%3D%3D"
+    //중기예보
+    let serviceKey2 = "dP56BeIkDFP%2Bpu3BL%2FBmJMGAzYIosy%2BBxZTykiTGKFxqT6%2FR7WPOAlHS4xzUhY1f7zdgU6HHkeX6iYl4aL8Wng%3D%3D"
     var nowWeatherResponse: NowResponse?
     var townWeatherResponse: TownResponse?
     override func viewDidLoad() {
@@ -243,7 +242,7 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
             
            //cell.contentView.backgroundColor = .clear
             cell.commentText.text = sky?[indexPath.item].skyState
-            cell.dayText.text = t3h?[indexPath.item].fcstDateSubStr
+            cell.dayText.text = (t3h?[indexPath.item].fcstDateMon)!+"/"+(t3h?[indexPath.item].fcstDateDay)!
             cell.hoursText.text = t3h?[indexPath.item].fcstTimeSubStr
             cell.temperatureText.text = t3h?[indexPath.item].fcstValue
             cell.apparelImage.image = UIImage(named: "backgroundIMG")
@@ -263,8 +262,11 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
             //셀 모서리 굴곡
             cell.layer.cornerRadius = 10;
             //cell.layer.masksToBounds = YES;
-
-            cell.dayText.text = testWeekText[indexPath.item]
+            var mon: String = (tmn?[indexPath.item].fcstDateMon)!
+            var day: String = (tmn?[indexPath.item].fcstDateDay)!
+            var year: String = (tmn?[indexPath.item].fcstDateYear)!
+            
+            cell.dayText.text = Date().weekday(year: Int(year)!, month: Int(mon)!, day: Int(day)!)
             //cell.apparalImage
             cell.maxText.text = "최고"
             cell.minText.text = "최저"
@@ -316,16 +318,21 @@ extension ViewController: UICollectionViewDelegateFlowLayout {
 extension ViewController: SearchViewDelegate {
     func sendData(data: Map, type: String) {
         
-        let serviceKey = "dP56BeIkDFP%2Bpu3BL%2FBmJMGAzYIosy%2BBxZTykiTGKFxqT6%2FR7WPOAlHS4xzUhY1f7zdgU6HHkeX6iYl4aL8Wng%3D%3D"
         let baseDate = Date().toDateString(dateFormat: "yyyyMMdd")
         
         var baseTime: String
         var urlStr: String
+        var key: String
         let gridXY = ConvertGrid.convertGRID_GPS(mode: "TO_GRID", lat_X: data.latitude, lng_Y: data.longitude)
+        if type == "" {
+            key = serviceKey2
+        } else {
+            key = serviceKey
+        }
         //초단기예보
         if type == "getUltraSrtNcst" {
             baseTime = Date().toTimeString(timeFormat: "HH", type: type) + "00"
-            urlStr = String( "http://apis.data.go.kr/1360000/VilageFcstInfoService/" + type +  "?serviceKey=" + serviceKey + "&base_date=" + baseDate + "&base_time=" + baseTime + "&nx=" + String(gridXY.x) + "&ny=" + String(gridXY.y) + "&dataType=JSON")
+            urlStr = String( "http://apis.data.go.kr/1360000/VilageFcstInfoService/" + type +  "?serviceKey=" + key + "&base_date=" + baseDate + "&base_time=" + baseTime + "&nx=" + String(gridXY.x) + "&ny=" + String(gridXY.y) + "&dataType=JSON")
             
             print("urlStr")
             print(urlStr)

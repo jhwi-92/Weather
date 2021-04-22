@@ -117,6 +117,18 @@ struct ConvertGrid {
         public var x: Int
         public var y: Int
     }
+    
+    
+//    static func ConvertGridCode(town: String) -> String{
+//        var tt = [
+//            {name: "서울", code: "11B10101"}
+//            {name: "서울", code: "11B10101"}
+//            {name: "서울", code: "11B10101"}
+//            {name: "서울", code: "11B10101"}
+//            {name: "서울", code: "11B10101"}
+//        ]
+//    }
 
     
 }
+

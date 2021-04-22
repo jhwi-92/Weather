@@ -133,11 +133,13 @@ struct TownInfo: Codable {
         var state: String = ""
         if category == "SKY" {
             switch Int(fcstValue)! {
-            case 0...5:
+            case 0...1:
                 state = "오늘은 맑아요! 산책 쌉가능"
                 //return
-            case 6...8:
-                state = "구름이 많아요! 산책 가능"
+            case 2:
+                state = "구름이 조금! 산책 가능"
+            case 3:
+                state = "구름이 많아요! ㅇㅇ"
             default:
                 state = "하늘이 흐려요! ㅜㅜ"
             }
@@ -149,11 +151,13 @@ struct TownInfo: Codable {
         var state: String = ""
         if category == "SKY" {
             switch Int(fcstValue)! {
-            case 0...5:
+            case 0...1:
                 state = "맑음"
                 //return
-            case 6...8:
-                state = "조금 흐림"
+            case 2:
+                state = "구름조금"
+            case 3:
+                state = "약간흐림"
             default:
                 state = "흐림"
             }
@@ -161,16 +165,26 @@ struct TownInfo: Codable {
         return state
     }
     
-    var fcstDateSubStr: String {
+    var fcstDateYear: String {
+        var firstIdx: String.Index = fcstDate.index(fcstDate.startIndex, offsetBy: 0)
+        var endIdx: String.Index = fcstDate.index(fcstTime.startIndex, offsetBy: 4)
+        let year = String(fcstDate[firstIdx..<endIdx])
+        return year
+    }
+    var fcstDateMon: String {
         var firstIdx: String.Index = fcstDate.index(fcstDate.startIndex, offsetBy: 4)
         var endIdx: String.Index = fcstDate.index(fcstTime.startIndex, offsetBy: 6)
         let mon = String(fcstDate[firstIdx..<endIdx])
-        firstIdx = fcstDate.index(fcstDate.startIndex, offsetBy: 6)
-        endIdx = fcstDate.index(fcstDate.startIndex, offsetBy: 8)
-        let day = String(fcstDate[firstIdx..<endIdx])
-        
-        return mon+"/"+day
+        return mon
     }
+    
+    var fcstDateDay: String {
+        var firstIdx = fcstDate.index(fcstDate.startIndex, offsetBy: 6)
+        var endIdx = fcstDate.index(fcstDate.startIndex, offsetBy: 8)
+        let day = String(fcstDate[firstIdx..<endIdx])
+        return day
+    }
+    
     var fcstTimeSubStr: String {
         let endIdx: String.Index = fcstTime.index(fcstTime.startIndex, offsetBy: 2)
 

@@ -50,4 +50,21 @@ extension Date {
         
         return hour
     }
+    
+    func weekday(year: Int, month: Int, day: Int) -> String? {
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.locale = Locale(identifier: "Ko_kr")
+        
+        guard let targetDate: Date = {
+            let comps = DateComponents(calendar:calendar, year: year, month: month, day: day)
+            return comps.date
+            }() else { return nil }
+        
+        let day = Calendar.current.component(.weekday, from: targetDate) - 1
+        
+        return Calendar.current.shortWeekdaySymbols[day] // ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+    //    return Calendar.current.standaloneWeekdaySymbols[day] // ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday",
+    //    return Calendar.current.veryShortWeekdaySymbols[day] // ["S", "M", "T", "W", "T", "F", "S"]
+    }
+   
 }

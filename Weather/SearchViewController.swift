@@ -109,39 +109,11 @@ extension SearchViewController: UITableViewDelegate {
             guard let placeMark = response?.mapItems[0].placemark else {
                 return
             }
-            print("selectRow")
-            //print(placeMark.coordinate.)
-            print(placeMark.coordinate)
-            print(placeMark.countryCode!)
-            print(placeMark.title!)
-            print("==========")
-            //placeMark.region.self
-            
-            //placeMark.region
-            //MKCoordinateRegion.
-        
-            //placeMark.coordinate
-            //MKCoordinateRegion(
-            
-            //let coordinateSpan = MKCoordinateSpan(latitudeDelta: placeMark.coordinate.latitude, longitudeDelta: placeMark.coordinate.longitude)
-            //let coordinate = MKCoordinateRegion(center: placeMark.coordinate, span: coordinateSpan)
-            
-            
-            
-          
-            
-            //self.delegate?
-//            let coordinate = Coordinate(coordinate: placeMark.coordinate)
-            
-            //self.delegate?.userAdd(newLocation: Location(coordinate: coordinate, name: "\(placeMark.locality ?? selectedResult.title)"))
-            //delegate?.sendData(data: placeMark)
-            
-            //data.world = placeMark.countryCode!
             //administrativeArea: 시
             //locality: 구
             //thorughfare: 동
             
-            let data = Map(name: CLPlacemark.init(placemark: placeMark).thoroughfare!, latitude: placeMark.coordinate.latitude, longitude: placeMark.coordinate.longitude)
+            let data = Map(name: CLPlacemark.init(placemark: placeMark).thoroughfare!, latitude: placeMark.coordinate.latitude, longitude: placeMark.coordinate.longitude, town: placeMark.administrativeArea!)
             
             print("1")
             print(CLPlacemark.init(placemark: placeMark).thoroughfare)
