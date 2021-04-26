@@ -53,6 +53,17 @@ struct NowBody: Codable {
 
 struct NowItem: Codable {
     let item: [NowInfo]
+    
+    var TEM: [NowInfo] {
+        var temData: [NowInfo] = []
+        for i in item {
+            if i.category == "T1H" {
+                    //t3hData.insert(i, at: 0)
+                temData.append(i)
+            }
+        }
+        return temData
+    }
 }
 
 struct NowInfo: Codable {

@@ -113,7 +113,7 @@ extension SearchViewController: UITableViewDelegate {
             //locality: 구
             //thorughfare: 동
             
-            let data = Map(name: CLPlacemark.init(placemark: placeMark).thoroughfare!, latitude: placeMark.coordinate.latitude, longitude: placeMark.coordinate.longitude, town: placeMark.administrativeArea!)
+            let data = Map(name: CLPlacemark.init(placemark: placeMark).thoroughfare!, latitude: placeMark.coordinate.latitude, longitude: placeMark.coordinate.longitude)
             
             print("1")
             print(CLPlacemark.init(placemark: placeMark).thoroughfare)

@@ -145,21 +145,11 @@ extension ViewController: UITableViewDataSource {
     //cell
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.row == 0 {
+            guard let nowWeather = nowWeatherResponse  else { return UITableViewCell() }
+            guard let townWeather = townWeatherResponse  else { return UITableViewCell() }
             
             guard let cell: CustomTodayTableViewCell = tableView.dequeueReusableCell(withIdentifier: "todayCell", for: indexPath) as? CustomTodayTableViewCell else {return CustomTodayTableViewCell()}
-            //guard self.weatherResponse? != nil as? CustomTodayTableViewCell else {return CustomTodayTableViewCell()}
-            //guard let nilCheck = self.weatherResponse else {return }
-            if self.nowWeatherResponse != nil {
-                let tem = ConvertGrid.nowSearch(type: "T1H", data: (self.nowWeatherResponse?.response.body.items.item)!)
-                print("tem")
-                print(tem)
-                print(self.townWeatherResponse?.response.body.items.item[3].skyStateComment)
-                cell.averageText.text = "현재"
-                cell.todayText.text = Date().toDateString(dateFormat: "M월 d일 HH시")
-                cell.temperature.text = tem
-                cell.comment.text = self.townWeatherResponse?.response.body.items.SKY[0].skyStateComment
-                cell.temperatureSymbol.text = "℃"
-            }
+                cell.modifyCell(with: nowWeather.response.body.items.TEM[0], with: townWeather.response.body.items.SKY[0])
             return cell
         } else if indexPath.row == 1 {
   
@@ -333,32 +323,12 @@ extension ViewController: SearchViewDelegate {
         if type == "getUltraSrtNcst" {
             baseTime = Date().toTimeString(timeFormat: "HH", type: type) + "00"
             urlStr = String( "http://apis.data.go.kr/1360000/VilageFcstInfoService/" + type +  "?serviceKey=" + key + "&base_date=" + baseDate + "&base_time=" + baseTime + "&nx=" + String(gridXY.x) + "&ny=" + String(gridXY.y) + "&dataType=JSON")
-            
-            print("urlStr")
-            print(urlStr)
-            
         } else {
             //동네예보 getVilageFcst
             baseTime = Date().toTimeString(timeFormat: "HH", type: type) + "00"
             urlStr = String( "http://apis.data.go.kr/1360000/VilageFcstInfoService/" + type +  "?serviceKey=" + serviceKey + "&base_date=" + baseDate + "&base_time=" + baseTime + "&nx=" + String(gridXY.x) + "&ny=" + String(gridXY.y) + "&dataType=JSON&pageNo=1&numOfRows=195")
-            
-            print("urlStr")
-            print(urlStr)
         }
-
-        print("vc")
-        print(data.latitude)
-        print(data.longitude)
-        print(data.name)
         setNavigationTitle(titleText: data.name)
-        
-        
-
-        
-        
-        
-        //let url = "http://apis.data.go.kr/1360000/VilageFcstInfoService/getUltraSrtNcst?"
-        
         
         Network.request(urlPath: urlStr) { [weak self] result in
                     guard let self = self else { return }
@@ -369,17 +339,9 @@ extension ViewController: SearchViewDelegate {
                     if type == "getUltraSrtNcst" {
                         let apiResponse: NowResponse = try JSONDecoder().decode(NowResponse.self, from: data)
                         self.nowWeatherResponse = apiResponse
-                        print(self.nowWeatherResponse)
-                        let tem = ConvertGrid.nowSearch(type: "T1H", data: (self.nowWeatherResponse?.response.body.items.item)!)
-                        print("tem")
-                        print(tem)
                     } else if type == "getVilageFcst" {
                         let apiResponse: TownResponse = try JSONDecoder().decode(TownResponse.self, from: data)
                         self.townWeatherResponse = apiResponse
-                        print(self.townWeatherResponse)
-                        let sky = ConvertGrid.townSearch(type: "SKY", data: (self.townWeatherResponse?.response.body.items.item)!)
-                        print("sky")
-                        print(sky)
                     }
                     
                     OperationQueue.main.addOperation {
@@ -389,25 +351,9 @@ extension ViewController: SearchViewDelegate {
                 } catch(let err) {
                     print(err)
                 }
-                        //self.jsonParser.delegate = self
-                        //self.jsonParser.startParsing(data: data, parsingType: .detail, conciseCity: self.city)
             case .failed(let error):
                         print(error)
-//                        if let data = UserDefaults.standard.value(forKey: self.city.name) as? Data {
-//                            if let city = try? PropertyListDecoder().decode(DetailCity.self, from: data) {
-//                                self.detailCity = city
-//                                DispatchQueue.main.async { [weak self] in
-//                                    self?.weatherDetailTableView.reloadData()
-//                                }
-//                            }
-//                        } else {
-//                            self.presentAlert(error.localizedDescription, message: "\(error.code)", completion: nil)
-//                        }
-                    }
-                }
-        
-
-       }
-
-
+            }
+        }
+   }
 }

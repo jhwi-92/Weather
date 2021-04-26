@@ -14,21 +14,9 @@ struct Network {
     }
 
     static func request(urlPath: String, completion:@escaping (_ result: NetworkResult)->()) {
-        //let encoded = urlPath.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
-        //let url = URL(string: encoded!)
+
         guard let url: URL = URL(string: urlPath) else {return}
-        print("url")
-        print(url)
-       // let sendData = try! JSONSerialization.data(withJSONObject: param, options: [])
-        
-//        var request = URLRequest(url: url!)
-//        request.httpMethod = "POST"
-//        request.httpBody = sendData
-//        
-//        // HTTP 메시지 헤더
-//        request.addValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
-        //request.setValue(String(sendData.count), forHTTPHeaderField: "Content-Length")
-        
+
         let urlSession = URLSession.shared
 
         let task = urlSession.dataTask(with: url as URL) { (data, response, error) -> Void in

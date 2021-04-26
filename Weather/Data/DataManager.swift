@@ -40,7 +40,6 @@ class DataManager {
         newCity.latitude = map.latitude
         newCity.insertDate = Date()
         
-        
         cityList.insert(newCity, at: 0)
         saveContext()
     }

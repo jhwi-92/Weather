@@ -12,7 +12,7 @@ struct Map {
     public var name: String
     public var latitude: Double
     public var longitude: Double
-    public var town: String
+    //public var town: String
     
 }
 

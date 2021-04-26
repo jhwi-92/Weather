@@ -90,40 +90,28 @@
 		E92718B7261B0AF800EB0FBB /* Weather */ = {
 			isa = PBXGroup;
 			children = (
+				E9CF4C082636C3000077887B /* Service */,
+				E9CF4C052636B57F0077887B /* ViewModel */,
+				E9CF4C042636B55F0077887B /* delete */,
+				E9CF4C022636B47D0077887B /* Model */,
+				E9CF4C012636B4560077887B /* View */,
+				E9CF4C002636B4410077887B /* AppDelegate */,
+				E9CF4BFF2636B42A0077887B /* Resource */,
 				E9CF4BFA262966A10077887B /* Data */,
-				E94E091B26205B3F0025E141 /* Utilities */,
-				E92718B8261B0AF800EB0FBB /* AppDelegate.swift */,
-				E92718BA261B0AF800EB0FBB /* SceneDelegate.swift */,
-				E92718BC261B0AF800EB0FBB /* ViewController.swift */,
-				E92718BE261B0AF800EB0FBB /* Main.storyboard */,
-				E92718C4261B0AFB00EB0FBB /* Assets.xcassets */,
-				E92718C6261B0AFB00EB0FBB /* LaunchScreen.storyboard */,
+				E94E091B26205B3F0025E141 /* Extension */,
 				E92718C9261B0AFB00EB0FBB /* Info.plist */,
 				E92718C1261B0AF800EB0FBB /* Weather.xcdatamodeld */,
-				E92718D1261C406700EB0FBB /* CustomTodayTableViewCell.swift */,
-				E92718D6261C6E5400EB0FBB /* CustomApparelCollectionViewCell.swift */,
-				E92718D9261C75E200EB0FBB /* CustomCollectionViewTableViewCell.swift */,
-				E92718DC261DA2F800EB0FBB /* CustomThreeHoursCollectionTableViewCell.swift */,
-				E92718DF261DAC4C00EB0FBB /* CustomThreeHoursCollectionViewCell.swift */,
-				E92718E2261EF13100EB0FBB /* CustomWeekCollectionViewCell.swift */,
-				E92718E5261EF1CB00EB0FBB /* CustomWeekCollectionTableViewCell.swift */,
-				E94E0917262027410025E141 /* SearchViewController.swift */,
-				E94E091F26244AD90025E141 /* Map.swift */,
-				E94E092226244E850025E141 /* Coordinate.swift */,
-				E94E09252626B2CD0025E141 /* Network.swift */,
-				E94E09282626D7B20025E141 /* ConvertGrid.swift */,
-				E94E092B2626DB380025E141 /* APIResponse.swift */,
 			);
 			path = Weather;
 			sourceTree = "<group>";
 		};
-		E94E091B26205B3F0025E141 /* Utilities */ = {
+		E94E091B26205B3F0025E141 /* Extension */ = {
 			isa = PBXGroup;
 			children = (
 				E94E091C26205BAA0025E141 /* UIViewControllerExtension.swift */,
 				E94E092E262845CA0025E141 /* DateExtension.swift */,
 			);
-			path = Utilities;
+			path = Extension;
 			sourceTree = "<group>";
 		};
 		E9CF4BFA262966A10077887B /* Data */ = {
@@ -132,6 +120,90 @@
 				E9CF4BFB262966BA0077887B /* DataManager.swift */,
 			);
 			path = Data;
+			sourceTree = "<group>";
+		};
+		E9CF4BFF2636B42A0077887B /* Resource */ = {
+			isa = PBXGroup;
+			children = (
+				E92718C4261B0AFB00EB0FBB /* Assets.xcassets */,
+			);
+			path = Resource;
+			sourceTree = "<group>";
+		};
+		E9CF4C002636B4410077887B /* AppDelegate */ = {
+			isa = PBXGroup;
+			children = (
+				E92718B8261B0AF800EB0FBB /* AppDelegate.swift */,
+				E92718BA261B0AF800EB0FBB /* SceneDelegate.swift */,
+			);
+			path = AppDelegate;
+			sourceTree = "<group>";
+		};
+		E9CF4C012636B4560077887B /* View */ = {
+			isa = PBXGroup;
+			children = (
+				E9CF4C0A2636C3750077887B /* Cells */,
+				E9CF4C092636C36C0077887B /* Controller */,
+				E92718BE261B0AF800EB0FBB /* Main.storyboard */,
+				E92718C6261B0AFB00EB0FBB /* LaunchScreen.storyboard */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		E9CF4C022636B47D0077887B /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				E94E091F26244AD90025E141 /* Map.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		E9CF4C042636B55F0077887B /* delete */ = {
+			isa = PBXGroup;
+			children = (
+				E94E092226244E850025E141 /* Coordinate.swift */,
+			);
+			path = delete;
+			sourceTree = "<group>";
+		};
+		E9CF4C052636B57F0077887B /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				E94E09282626D7B20025E141 /* ConvertGrid.swift */,
+				E94E092B2626DB380025E141 /* APIResponse.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		E9CF4C082636C3000077887B /* Service */ = {
+			isa = PBXGroup;
+			children = (
+				E94E09252626B2CD0025E141 /* Network.swift */,
+			);
+			path = Service;
+			sourceTree = "<group>";
+		};
+		E9CF4C092636C36C0077887B /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				E92718BC261B0AF800EB0FBB /* ViewController.swift */,
+				E94E0917262027410025E141 /* SearchViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		E9CF4C0A2636C3750077887B /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				E92718D1261C406700EB0FBB /* CustomTodayTableViewCell.swift */,
+				E92718D6261C6E5400EB0FBB /* CustomApparelCollectionViewCell.swift */,
+				E92718D9261C75E200EB0FBB /* CustomCollectionViewTableViewCell.swift */,
+				E92718DC261DA2F800EB0FBB /* CustomThreeHoursCollectionTableViewCell.swift */,
+				E92718DF261DAC4C00EB0FBB /* CustomThreeHoursCollectionViewCell.swift */,
+				E92718E2261EF13100EB0FBB /* CustomWeekCollectionViewCell.swift */,
+				E92718E5261EF1CB00EB0FBB /* CustomWeekCollectionTableViewCell.swift */,
+			);
+			path = Cells;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
