@@ -30,6 +30,7 @@
 		E94E092C2626DB380025E141 /* APIResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E94E092B2626DB380025E141 /* APIResponse.swift */; };
 		E94E092F262845CA0025E141 /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E94E092E262845CA0025E141 /* DateExtension.swift */; };
 		E9CF4BFC262966BA0077887B /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9CF4BFB262966BA0077887B /* DataManager.swift */; };
+		E9E0CD85263964D20011B2D7 /* JsonParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E0CD84263964D20011B2D7 /* JsonParser.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -58,6 +59,7 @@
 		E94E092B2626DB380025E141 /* APIResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIResponse.swift; sourceTree = "<group>"; };
 		E94E092E262845CA0025E141 /* DateExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtension.swift; sourceTree = "<group>"; };
 		E9CF4BFB262966BA0077887B /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
+		E9E0CD84263964D20011B2D7 /* JsonParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsonParser.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -179,6 +181,7 @@
 			isa = PBXGroup;
 			children = (
 				E94E09252626B2CD0025E141 /* Network.swift */,
+				E9E0CD84263964D20011B2D7 /* JsonParser.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -281,6 +284,7 @@
 				E92718D2261C406700EB0FBB /* CustomTodayTableViewCell.swift in Sources */,
 				E94E09262626B2CD0025E141 /* Network.swift in Sources */,
 				E92718D7261C6E5400EB0FBB /* CustomApparelCollectionViewCell.swift in Sources */,
+				E9E0CD85263964D20011B2D7 /* JsonParser.swift in Sources */,
 				E92718DA261C75E200EB0FBB /* CustomCollectionViewTableViewCell.swift in Sources */,
 				E94E092F262845CA0025E141 /* DateExtension.swift in Sources */,
 				E92718DD261DA2F800EB0FBB /* CustomThreeHoursCollectionTableViewCell.swift in Sources */,

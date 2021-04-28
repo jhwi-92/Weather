@@ -9,7 +9,6 @@ import UIKit
 
 class ViewController: UIViewController {
     
-  
 
     @IBOutlet weak var navigationBar: UINavigationBar!
     @IBAction func plusButton(_ sender: Any) {
@@ -29,26 +28,16 @@ class ViewController: UIViewController {
     let serviceKey2 = "dP56BeIkDFP%2Bpu3BL%2FBmJMGAzYIosy%2BBxZTykiTGKFxqT6%2FR7WPOAlHS4xzUhY1f7zdgU6HHkeX6iYl4aL8Wng%3D%3D"
     var nowWeatherResponse: NowResponse?
     var townWeatherResponse: TownResponse?
+    var jsonParser = JsonParser()
     override func viewDidLoad() {
         
         super.viewDidLoad()
-        //DataManager.shared.fetchCity()
-        // Do any additional setup after loading the view.
-//        let url = String(format: "https://api.darksky.net/forecast//%lf,%lf?lang=ko", 12.333, 154.44)
-//
-//        print("11")
-//        print(url)
-        //presentAlert("알림", message: "test", completion: nil)
 
         self.tableView.dataSource = self
         self.tableView.delegate = self
-        //self.view.collection
-        //self.tableView.rowHeight = 200
-        
         self.setNavigationTitle(titleText: "위치")
         self.setNavigationBar()
         self.view.addBackground()
-        //navigationItem.title =
     }
     
     //화면에 표시되기 직전 표시(목록 업데이트 등)
@@ -56,18 +45,16 @@ class ViewController: UIViewController {
         super.viewWillAppear(animated)
         
         DataManager.shared.fetchCity()
-        print(DataManager.shared.cityList)
         guard let city: City = DataManager.shared.cityList.first else {
             return
         }
         
         let map = Map(name: city.name!, latitude: city.latitude, longitude: city.longitude)
         //초단기실황(현재기온)getUltraSrtNcst
-        sendData(data: map, type: "getUltraSrtNcst")
+        fetchData(data: map, type: "getUltraSrtNcst")
         
         //동네예보(오늘 하늘상태 및 3시간 간격 기온)getVilageFcst
-        sendData(data: map, type: "getVilageFcst")
-        
+        fetchData(data: map, type: "getVilageFcst")
         
         //배열에 저장된 데이터로 데이터 호출
         tableView.reloadData()
@@ -102,11 +89,71 @@ class ViewController: UIViewController {
         
     }
     
-    func setTemData() {
+    func fetchData(data: Map, type: String) {
         
-    }
-
-
+        let baseDate = Date().toDateString(dateFormat: "yyyyMMdd")
+        
+        var baseTime: String
+        var urlStr: String
+        var key: String
+        let gridXY = ConvertGrid.convertGRID_GPS(mode: "TO_GRID", lat_X: data.latitude, lng_Y: data.longitude)
+        if type == "" {
+            key = serviceKey2
+        } else {
+            key = serviceKey
+        }
+        //초단기예보
+        if type == "getUltraSrtNcst" {
+            baseTime = Date().toTimeString(timeFormat: "HH", type: type) + "00"
+            urlStr = String( "http://apis.data.go.kr/1360000/VilageFcstInfoService/" + type +  "?serviceKey=" + key + "&base_date=" + baseDate + "&base_time=" + baseTime + "&nx=" + String(gridXY.x) + "&ny=" + String(gridXY.y) + "&dataType=JSON")
+        } else {
+            //동네예보 getVilageFcst
+            baseTime = Date().toTimeString(timeFormat: "HH", type: type) + "00"
+            urlStr = String( "http://apis.data.go.kr/1360000/VilageFcstInfoService/" + type +  "?serviceKey=" + serviceKey + "&base_date=" + baseDate + "&base_time=" + baseTime + "&nx=" + String(gridXY.x) + "&ny=" + String(gridXY.y) + "&dataType=JSON&pageNo=1&numOfRows=195")
+        }
+        setNavigationTitle(titleText: data.name)
+            Network.request(urlPath: urlStr) { [weak self] result in
+                guard let self = self else { return }
+                switch result {
+                case .success(let data):
+                    self.jsonParser.delegate = self
+                    
+//                    do {
+                        if type == "getUltraSrtNcst" {
+                            self.jsonParser.startParsing(data: data, parsingType: .now)
+//                            let apiResponse: NowResponse = try JSONDecoder().decode(NowResponse.self, from: data)
+//                            self.nowWeatherResponse = apiResponse
+//                            guard let body = self.nowWeatherResponse?.response.body else {
+//
+//                                self.presentAlert("알림", message: (self.nowWeatherResponse?.response.header.resultMsg)!+"\n 문의 부탁드립니다.", completion: nil)
+//                                return
+//                            }
+//                            OperationQueue.main.addOperation {
+//                                self.tableView.reloadData()
+//                            }
+                        } else if type == "getVilageFcst" {
+                            self.jsonParser.startParsing(data: data, parsingType: .town)
+//                            let apiResponse: TownResponse = try JSONDecoder().decode(TownResponse.self, from: data)
+//                            self.townWeatherResponse = apiResponse
+//
+//                            guard let body = self.townWeatherResponse?.response.body else {
+//                                self.presentAlert("알림", message: (self.townWeatherResponse?.response.header.resultMsg)!+"\n 문의 부탁드립니다.", completion: nil)
+//                                return
+//                            }
+//                            OperationQueue.main.addOperation {
+//                                self.tableView.reloadData()
+//                            }
+                        }
+                        
+//                    } catch(let err) {
+//                        print(err)
+//                    }
+                case .failed(let error):
+                    self.presentAlert(error.localizedDescription, message: "\(error.code)", completion: nil)
+                
+                }
+            }
+        }
 }
 
 
@@ -149,7 +196,7 @@ extension ViewController: UITableViewDataSource {
             guard let townWeather = townWeatherResponse  else { return UITableViewCell() }
             
             guard let cell: CustomTodayTableViewCell = tableView.dequeueReusableCell(withIdentifier: "todayCell", for: indexPath) as? CustomTodayTableViewCell else {return CustomTodayTableViewCell()}
-                cell.modifyCell(with: nowWeather.response.body.items.TEM[0], with: townWeather.response.body.items.SKY[0])
+            cell.modifyCell(nowInfo: nowWeather.response.body!.items.TEM[0], townInfo: townWeather.response.body!.items.SKY[0])
             return cell
         } else if indexPath.row == 1 {
   
@@ -157,9 +204,7 @@ extension ViewController: UITableViewDataSource {
             
             cell.collectionView?.delegate = self
             cell.collectionView?.dataSource = self
-            
             cell.collectionView.tag = indexPath.row
-            //cell.collectionView?.backgroundColor = UIColor.init(red: 10, green: 10, blue: 10, alpha: 1)
             
             return cell
         } else if indexPath.row == 2 {
@@ -181,7 +226,6 @@ extension ViewController: UITableViewDataSource {
             cell.collectionView?.dataSource = self
             
             cell.collectionView.tag = indexPath.row
-            //cell.collectionView?.backgroundColor = UIColor.init(red: 10, green: 10, blue: 10, alpha: 1)
             
             return cell
         }
@@ -191,19 +235,15 @@ extension ViewController: UITableViewDataSource {
 //MARK: UICollectionView
 extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-//        return CGSize(width: 88, height: 88)
-//    }
-    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         //self.tableView.
         if collectionView.tag == 1 {
             return testText.count
         } else if collectionView.tag == 2 {
-            guard let count: Int = self.townWeatherResponse?.response.body.items.T3H.count else {return 0}
+            guard let count: Int = self.townWeatherResponse?.response.body?.items.T3H.count else {return 0}
             return count
         } else if collectionView.tag == 3 {
-            guard let tmnCount: Int = self.townWeatherResponse?.response.body.items.TMN.count else {return 0}
+            guard let tmnCount: Int = self.townWeatherResponse?.response.body?.items.TMN.count else {return 0}
             
             let count: Int = tmnCount + 0
             return count
@@ -217,53 +257,30 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
             guard let cell: CustomApparelCollectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: "apparelCell", for: indexPath) as? CustomApparelCollectionViewCell else {
                 return UICollectionViewCell()
             }
-           //cell.contentView.backgroundColor = .clear
+           //추후 다시! 이미지필요
             cell.apparelImage.image = UIImage(named: "backgroundIMG")
             cell.apparelText.text = testText[indexPath.item]
             
             return  cell
         } else if collectionView.tag == 2 {
-            //collectionView.register(CustomThreeHoursCollectionViewCell.self, forCellWithReuseIdentifier: "threeHoursCell")
+            guard let townWeather = townWeatherResponse  else { return UICollectionViewCell() }
+            
             guard let cell: CustomThreeHoursCollectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: "threeHoursCell", for: indexPath) as? CustomThreeHoursCollectionViewCell else {
                 return CustomThreeHoursCollectionViewCell()
             }
-            var sky = self.townWeatherResponse?.response.body.items.SKY
-            var t3h = self.townWeatherResponse?.response.body.items.T3H
             
-           //cell.contentView.backgroundColor = .clear
-            cell.commentText.text = sky?[indexPath.item].skyState
-            cell.dayText.text = (t3h?[indexPath.item].fcstDateMon)!+"/"+(t3h?[indexPath.item].fcstDateDay)!
-            cell.hoursText.text = t3h?[indexPath.item].fcstTimeSubStr
-            cell.temperatureText.text = t3h?[indexPath.item].fcstValue
-            cell.apparelImage.image = UIImage(named: "backgroundIMG")
-            //cell.apparelText.text = testText[indexPath.item]
+            cell.modifyCell(townItem: townWeather.response.body!.items, index: indexPath.row)
             
             return cell
         } else if collectionView.tag == 3 {
+            guard let townWeather = townWeatherResponse  else { return UICollectionViewCell() }
+            
             guard let cell: CustomWeekCollectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: "weekCollectionCell", for: indexPath) as? CustomWeekCollectionViewCell else {
                 return CustomWeekCollectionViewCell()
             }
-            //최저
-            var tmn = self.townWeatherResponse?.response.body.items.TMN
-            //최고
-            var tmx = self.townWeatherResponse?.response.body.items.TMX
-           //cell.contentView.backgroundColor = .clear
-            //cell.dayText.text = testCommentText[indexPath.item]
-            //셀 모서리 굴곡
-            cell.layer.cornerRadius = 10;
-            //cell.layer.masksToBounds = YES;
-            var mon: String = (tmn?[indexPath.item].fcstDateMon)!
-            var day: String = (tmn?[indexPath.item].fcstDateDay)!
-            var year: String = (tmn?[indexPath.item].fcstDateYear)!
             
-            cell.dayText.text = Date().weekday(year: Int(year)!, month: Int(mon)!, day: Int(day)!)
-            //cell.apparalImage
-            cell.maxText.text = "최고"
-            cell.minText.text = "최저"
-            cell.maxTemperature.text = tmx?[indexPath.item].fcstValue
-            cell.minTemperature.text = tmn?[indexPath.item].fcstValue
-            cell.apparelImage.image = UIImage(named: "backgroundIMG")
-            //cell.apparelText.text = testText[indexPath.item]
+            cell.layer.cornerRadius = 10;
+            cell.modifyCell(townItem: townWeather.response.body!.items, index: indexPath.row)
             
             return cell
         }
@@ -276,33 +293,33 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
 //MARK: UICollectionViewFlowLayout
 extension ViewController: UICollectionViewDelegateFlowLayout {
 
-    // 위 아래 간격
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-//        return 4
-//    }
+}
 
-    // 옆 간격
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-//        return 4
-//    }
-//
-//    // cell 사이즈( 옆 라인을 고려하여 설정 )
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-//
-//        let width = collectionView.frame.width / 3 - 36 ///  2등분하여 배치, 옆 간격이 12이므로 12를 빼줌
-//        print("collectionView width=\(collectionView.frame.width)")
-//        print("cell하나당 width=\(width)")
-//        print("root view width = \(self.view.frame.width)")
-//
-//        let size = CGSize(width: width, height: width * 1.3)
-//        return size
-//    }
-//
-//    //cell 화면 사이드와 간격
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-//
-//        return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-//    }
+extension ViewController: JsonParserDelegate {
+    func parsingDidFinished<T>(result: T, parsingType: JsonParser.ParsingType) {
+        switch parsingType {
+        case .now:
+            nowWeatherResponse = result as? NowResponse
+            guard nowWeatherResponse != nil else { return }
+            guard nowWeatherResponse?.response.body != nil else {
+                presentAlert("알림", message: (nowWeatherResponse?.response.header.resultMsg)!, completion: nil)
+                return
+            }
+            DispatchQueue.main.async { [weak self] in
+                self?.tableView.reloadData()
+            }
+        case .town:
+            townWeatherResponse = result as? TownResponse
+            guard townWeatherResponse != nil else { return }
+            guard townWeatherResponse?.response.body != nil else {
+                presentAlert("알림", message: (townWeatherResponse?.response.header.resultMsg)!, completion: nil)
+                return
+            }
+            DispatchQueue.main.async { [weak self] in
+                self?.tableView.reloadData()
+            }
+        }
+    }
 }
 
 extension ViewController: SearchViewDelegate {
@@ -321,14 +338,16 @@ extension ViewController: SearchViewDelegate {
         }
         //초단기예보
         if type == "getUltraSrtNcst" {
-            baseTime = Date().toTimeString(timeFormat: "HH", type: type) + "00"
+            baseTime = Date().toTimeString(timeFormat: "HH", type: type) + "0"
             urlStr = String( "http://apis.data.go.kr/1360000/VilageFcstInfoService/" + type +  "?serviceKey=" + key + "&base_date=" + baseDate + "&base_time=" + baseTime + "&nx=" + String(gridXY.x) + "&ny=" + String(gridXY.y) + "&dataType=JSON")
         } else {
             //동네예보 getVilageFcst
-            baseTime = Date().toTimeString(timeFormat: "HH", type: type) + "00"
+            baseTime = Date().toTimeString(timeFormat: "HH", type: type) + "0"
             urlStr = String( "http://apis.data.go.kr/1360000/VilageFcstInfoService/" + type +  "?serviceKey=" + serviceKey + "&base_date=" + baseDate + "&base_time=" + baseTime + "&nx=" + String(gridXY.x) + "&ny=" + String(gridXY.y) + "&dataType=JSON&pageNo=1&numOfRows=195")
         }
         setNavigationTitle(titleText: data.name)
+        print("urlStr")
+        print(urlStr)
         
         Network.request(urlPath: urlStr) { [weak self] result in
                     guard let self = self else { return }
@@ -339,20 +358,25 @@ extension ViewController: SearchViewDelegate {
                     if type == "getUltraSrtNcst" {
                         let apiResponse: NowResponse = try JSONDecoder().decode(NowResponse.self, from: data)
                         self.nowWeatherResponse = apiResponse
+                        guard let body = self.nowWeatherResponse?.response.body else {
+                            return
+                        }
                     } else if type == "getVilageFcst" {
                         let apiResponse: TownResponse = try JSONDecoder().decode(TownResponse.self, from: data)
                         self.townWeatherResponse = apiResponse
+
+                        if self.townWeatherResponse?.response.body == nil {
+                        }
                     }
                     
                     OperationQueue.main.addOperation {
                         self.tableView.reloadData()
                     }
-                    //self.tableView.reloadData()
                 } catch(let err) {
                     print(err)
                 }
-            case .failed(let error):
-                        print(error)
+            case .failed(let err):
+                print(err)
             }
         }
    }

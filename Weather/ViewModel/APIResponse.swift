@@ -23,7 +23,7 @@ struct TownResponse: Codable {
 struct NowData: Codable {
 //    struct Movie: Codable {
         let header: Header
-        let body: NowBody
+        let body: NowBody?
         
     enum CodingKeys: String, CodingKey {
         case header, body
@@ -31,11 +31,11 @@ struct NowData: Codable {
 }
 struct TownData: Codable {
     let header: Header
-    let body: TownBody
+    let body: TownBody?
     
-    enum CodingKeys: String, CodingKey {
-        case header, body
-    }
+//    enum CodingKeys: String, CodingKey {
+//        case header, body
+//    }
 }
 
 struct Header: Codable {

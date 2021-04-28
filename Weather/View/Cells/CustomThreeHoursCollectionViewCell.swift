@@ -17,4 +17,17 @@ class CustomThreeHoursCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var apparelImage: UIImageView!
     
     
+    
+    func modifyCell(townItem: TownItem, index: Int) {
+        DispatchQueue.main.async { [weak self] in
+            self?.dayText.text = townItem.T3H[index].fcstDateMon+"/"+townItem.T3H[index].fcstDateDay
+            self?.hoursText.text = townItem.T3H[index].fcstTimeSubStr
+            self?.temperatureText.text = townItem.T3H[index].fcstValue
+            self?.commentText.text = townItem.SKY[index].skyState
+            self?.apparelImage.image = UIImage(named: "backgroundIMG")
+
+            self?.setNeedsLayout()
+        }
+    }
+    
 }
