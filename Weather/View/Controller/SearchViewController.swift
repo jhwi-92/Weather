@@ -9,7 +9,7 @@ import UIKit
 import MapKit
 
 protocol SearchViewDelegate {
-    func sendData(data: Map, type: String)
+    func sendData(data: Map)
 }
 
 
@@ -83,12 +83,25 @@ extension SearchViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return searchResults.count
+        if searchResults.count == 0 {
+            return DataManager.shared.cityList.count
+        } else {
+            return searchResults.count
+        }
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {        let cell = searchResultTable.dequeueReusableCell(withIdentifier: searchTableCellIdentifier, for: indexPath)
-        let searchResult = searchResults[indexPath.row]
-        cell.textLabel?.text = searchResult.title
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        let cell = searchResultTable.dequeueReusableCell(withIdentifier: searchTableCellIdentifier, for: indexPath)
+        
+        if searchResults.count == 0 {
+            let cityList = DataManager.shared.cityList[indexPath.row]
+            cell.textLabel?.text = cityList.name
+        } else {
+            let searchResult = searchResults[indexPath.row]
+            cell.textLabel?.text = searchResult.title
+        }
+        
         return cell
     }
     
@@ -115,15 +128,8 @@ extension SearchViewController: UITableViewDelegate {
             
             let data = Map(name: CLPlacemark.init(placemark: placeMark).thoroughfare!, latitude: placeMark.coordinate.latitude, longitude: placeMark.coordinate.longitude)
             
-            print("1")
-            print(CLPlacemark.init(placemark: placeMark).thoroughfare)
-            
-            //test.name = CLPlacemark.init(placemark: placeMark).thoroughfare!
-            //test.longitude = placeMark.coordinate.longitude
-            //test.latitude = placeMark.coordinate.latitude
-            //test.latitude = 1.11
             DataManager.shared.addNewCity(data)
-            //self.delegate?.sendData(data: data)
+            self.delegate?.sendData(data: data)
             
             self.dismiss(animated: true, completion: nil)
         }

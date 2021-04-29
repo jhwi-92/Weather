@@ -57,7 +57,7 @@ class ViewController: UIViewController {
         fetchData(data: map, type: "getVilageFcst")
         
         //배열에 저장된 데이터로 데이터 호출
-        tableView.reloadData()
+        //tableView.reloadData()
 
     }
     
@@ -117,37 +117,13 @@ class ViewController: UIViewController {
                 switch result {
                 case .success(let data):
                     self.jsonParser.delegate = self
-                    
-//                    do {
-                        if type == "getUltraSrtNcst" {
-                            self.jsonParser.startParsing(data: data, parsingType: .now)
-//                            let apiResponse: NowResponse = try JSONDecoder().decode(NowResponse.self, from: data)
-//                            self.nowWeatherResponse = apiResponse
-//                            guard let body = self.nowWeatherResponse?.response.body else {
-//
-//                                self.presentAlert("알림", message: (self.nowWeatherResponse?.response.header.resultMsg)!+"\n 문의 부탁드립니다.", completion: nil)
-//                                return
-//                            }
-//                            OperationQueue.main.addOperation {
-//                                self.tableView.reloadData()
-//                            }
-                        } else if type == "getVilageFcst" {
-                            self.jsonParser.startParsing(data: data, parsingType: .town)
-//                            let apiResponse: TownResponse = try JSONDecoder().decode(TownResponse.self, from: data)
-//                            self.townWeatherResponse = apiResponse
-//
-//                            guard let body = self.townWeatherResponse?.response.body else {
-//                                self.presentAlert("알림", message: (self.townWeatherResponse?.response.header.resultMsg)!+"\n 문의 부탁드립니다.", completion: nil)
-//                                return
-//                            }
-//                            OperationQueue.main.addOperation {
-//                                self.tableView.reloadData()
-//                            }
-                        }
-                        
-//                    } catch(let err) {
-//                        print(err)
-//                    }
+                    if type == "getUltraSrtNcst" {
+                        self.jsonParser.startParsing(data: data, parsingType: .now)
+
+                    } else if type == "getVilageFcst" {
+                        self.jsonParser.startParsing(data: data, parsingType: .town)
+
+                    }
                 case .failed(let error):
                     self.presentAlert(error.localizedDescription, message: "\(error.code)", completion: nil)
                 
@@ -323,61 +299,18 @@ extension ViewController: JsonParserDelegate {
 }
 
 extension ViewController: SearchViewDelegate {
-    func sendData(data: Map, type: String) {
+    func sendData(data: Map) {
         
-        let baseDate = Date().toDateString(dateFormat: "yyyyMMdd")
+//        DataManager.shared.fetchCity()
+//        guard let city: City = DataManager.shared.cityList.first else {
+//            return
+//        }
+//
+//        let map = Map(name: .name!, latitude: city.latitude, longitude: city.longitude)
+        //초단기실황(현재기온)getUltraSrtNcst
+        fetchData(data: data, type: "getUltraSrtNcst")
         
-        var baseTime: String
-        var urlStr: String
-        var key: String
-        let gridXY = ConvertGrid.convertGRID_GPS(mode: "TO_GRID", lat_X: data.latitude, lng_Y: data.longitude)
-        if type == "" {
-            key = serviceKey2
-        } else {
-            key = serviceKey
-        }
-        //초단기예보
-        if type == "getUltraSrtNcst" {
-            baseTime = Date().toTimeString(timeFormat: "HH", type: type) + "0"
-            urlStr = String( "http://apis.data.go.kr/1360000/VilageFcstInfoService/" + type +  "?serviceKey=" + key + "&base_date=" + baseDate + "&base_time=" + baseTime + "&nx=" + String(gridXY.x) + "&ny=" + String(gridXY.y) + "&dataType=JSON")
-        } else {
-            //동네예보 getVilageFcst
-            baseTime = Date().toTimeString(timeFormat: "HH", type: type) + "0"
-            urlStr = String( "http://apis.data.go.kr/1360000/VilageFcstInfoService/" + type +  "?serviceKey=" + serviceKey + "&base_date=" + baseDate + "&base_time=" + baseTime + "&nx=" + String(gridXY.x) + "&ny=" + String(gridXY.y) + "&dataType=JSON&pageNo=1&numOfRows=195")
-        }
-        setNavigationTitle(titleText: data.name)
-        print("urlStr")
-        print(urlStr)
-        
-        Network.request(urlPath: urlStr) { [weak self] result in
-                    guard let self = self else { return }
-            switch result {
-            case .success(let data):
-                print(data)
-                do {
-                    if type == "getUltraSrtNcst" {
-                        let apiResponse: NowResponse = try JSONDecoder().decode(NowResponse.self, from: data)
-                        self.nowWeatherResponse = apiResponse
-                        guard let body = self.nowWeatherResponse?.response.body else {
-                            return
-                        }
-                    } else if type == "getVilageFcst" {
-                        let apiResponse: TownResponse = try JSONDecoder().decode(TownResponse.self, from: data)
-                        self.townWeatherResponse = apiResponse
-
-                        if self.townWeatherResponse?.response.body == nil {
-                        }
-                    }
-                    
-                    OperationQueue.main.addOperation {
-                        self.tableView.reloadData()
-                    }
-                } catch(let err) {
-                    print(err)
-                }
-            case .failed(let err):
-                print(err)
-            }
-        }
+        //동네예보(오늘 하늘상태 및 3시간 간격 기온)getVilageFcst
+        fetchData(data: data, type: "getVilageFcst")
    }
 }
