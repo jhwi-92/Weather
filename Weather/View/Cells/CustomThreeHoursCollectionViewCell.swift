@@ -23,8 +23,14 @@ class CustomThreeHoursCollectionViewCell: UICollectionViewCell {
             self?.dayText.text = townItem.T3H[index].fcstDateMon+"/"+townItem.T3H[index].fcstDateDay
             self?.hoursText.text = townItem.T3H[index].fcstTimeSubStr
             self?.temperatureText.text = townItem.T3H[index].fcstValue
-            self?.commentText.text = townItem.SKY[index].skyState
-            self?.apparelImage.image = UIImage(named: "backgroundIMG")
+            if townItem.PTY[index].fcstValue == "0" {
+                self?.commentText.text = townItem.SKY[index].skyState
+                self?.apparelImage.image = UIImage(named: "backgroundIMG")
+            } else {
+                self?.commentText.text = townItem.PTY[index].ptyState
+                self?.apparelImage.image = UIImage(named: "umbrellaIMG")
+            }
+            
 
             self?.setNeedsLayout()
         }

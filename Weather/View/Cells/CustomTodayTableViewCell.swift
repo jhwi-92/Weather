@@ -27,12 +27,12 @@ class CustomTodayTableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
-    func modifyCell(nowInfo: NowInfo, townInfo: TownInfo) {
+    func modifyCell(nowInfo: NowInfo, comment: String) {
         DispatchQueue.main.async { [weak self] in
             self?.averageText.text = "현재"
             self?.todayText.text = Date().toDateString(dateFormat: "M월 d일 HH시")
             self?.temperature.text = nowInfo.obsrValue
-            self?.comment.text = townInfo.skyStateComment
+            self?.comment.text = comment
             self?.temperatureSymbol.text = "℃"
             
             self?.setNeedsLayout()

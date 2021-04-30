@@ -172,7 +172,12 @@ extension ViewController: UITableViewDataSource {
             guard let townWeather = townWeatherResponse  else { return UITableViewCell() }
             
             guard let cell: CustomTodayTableViewCell = tableView.dequeueReusableCell(withIdentifier: "todayCell", for: indexPath) as? CustomTodayTableViewCell else {return CustomTodayTableViewCell()}
-            cell.modifyCell(nowInfo: nowWeather.response.body!.items.TEM[0], townInfo: townWeather.response.body!.items.SKY[0])
+            var PTY: String = nowWeather.response.body!.items.PTY[0].obsrValue
+            if PTY == "0" {
+                cell.modifyCell(nowInfo: nowWeather.response.body!.items.TEM[0], comment: townWeather.response.body!.items.SKY[0].skyStateComment)
+            } else {
+                cell.modifyCell(nowInfo: nowWeather.response.body!.items.TEM[0], comment: nowWeather.response.body!.items.PTY[0].ptyState)
+            }
             return cell
         } else if indexPath.row == 1 {
   

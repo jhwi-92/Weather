@@ -64,6 +64,17 @@ struct NowItem: Codable {
         }
         return temData
     }
+    
+    var PTY: [NowInfo] {
+        var ptyData: [NowInfo] = []
+        for i in item {
+            if i.category == "PTY" {
+                ptyData.append(i)
+            }
+        }
+        return ptyData
+    }
+    
 }
 
 struct NowInfo: Codable {
@@ -73,6 +84,38 @@ struct NowInfo: Codable {
     let nx: Int
     let ny: Int
     let obsrValue: String
+    
+    
+    //없음(0), 비(1), 비/눈(2), 눈(3), 소나기(4), 빗방울(5), 빗방울/눈날림(6), 눈날림(7)
+    //여기서 비/눈은 비와 눈이 섞여 오는 것을 의미 (진눈개비)
+    var ptyState: String {
+        var state: String = ""
+        
+        switch Int(obsrValue)! {
+        case 0:
+            state = "없음"
+            //return
+        case 1:
+            state = "비"
+        case 2:
+            state = "비/눈"
+        case 3:
+            state = "눈"
+        case 4:
+            state = "소나기"
+        case 5:
+            state = "빗방울"
+        case 6:
+            state = "빗방울/눈날림"
+        case 7:
+            state = "눈날림"
+            
+        default:
+            state = "???"
+        }
+        
+        return state
+    }
 }
  
 struct TownBody: Codable {
@@ -128,6 +171,16 @@ struct TownItem: Codable {
         }
         return tmxData
     }
+    
+    var PTY: [TownInfo] {
+        var ptyData: [TownInfo] = []
+        for i in item {
+            if i.category == "PTY" {
+                ptyData.append(i)
+            }
+        }
+        return ptyData
+    }
 }
 
 struct TownInfo: Codable {
@@ -173,6 +226,35 @@ struct TownInfo: Codable {
                 state = "흐림"
             }
         }
+        return state
+    }
+    
+    var ptyState: String {
+        var state: String = ""
+        
+        switch Int(fcstValue)! {
+        case 0:
+            state = "없음"
+            //return
+        case 1:
+            state = "비"
+        case 2:
+            state = "비/눈"
+        case 3:
+            state = "눈"
+        case 4:
+            state = "소나기"
+        case 5:
+            state = "빗방울"
+        case 6:
+            state = "빗방울/눈날림"
+        case 7:
+            state = "눈날림"
+            
+        default:
+            state = "???"
+        }
+        
         return state
     }
     

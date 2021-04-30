@@ -110,6 +110,15 @@ extension SearchViewController: UITableViewDataSource {
 extension SearchViewController: UITableViewDelegate {
   // 선택된 위치의 정보 가져오기
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard searchResults.count != 0 else {
+            let city: City = DataManager.shared.cityList[indexPath.row]
+            let data: Map = .init(name: city.name!, latitude: city.latitude, longitude: city.longitude)
+            
+            self.delegate?.sendData(data: data)
+            
+            self.dismiss(animated: true, completion: nil)
+            return
+        }
         let selectedResult = searchResults[indexPath.row]
         let searchRequest = MKLocalSearch.Request(completion: selectedResult)
         let search = MKLocalSearch(request: searchRequest)
@@ -126,7 +135,19 @@ extension SearchViewController: UITableViewDelegate {
             //locality: 구
             //thorughfare: 동
             
-            let data = Map(name: CLPlacemark.init(placemark: placeMark).thoroughfare!, latitude: placeMark.coordinate.latitude, longitude: placeMark.coordinate.longitude)
+            let name: String
+            
+            if placeMark.thoroughfare != nil{
+                name = placeMark.thoroughfare!
+            } else if placeMark.locality != nil {
+                name = placeMark.locality!
+            } else if placeMark.administrativeArea != nil {
+                name = placeMark.administrativeArea!
+            } else {
+                name = placeMark.name!
+            }
+            
+            let data = Map(name: name, latitude: placeMark.coordinate.latitude, longitude: placeMark.coordinate.longitude)
             
             DataManager.shared.addNewCity(data)
             self.delegate?.sendData(data: data)
