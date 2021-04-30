@@ -155,6 +155,26 @@ extension SearchViewController: UITableViewDelegate {
             self.dismiss(animated: true, completion: nil)
         }
     }
+    
+    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+        return .delete
+    }
+
+    
+    // Override to support editing the table view.
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            
+            // Delete the row from the data source
+            
+            let target = DataManager.shared.cityList[indexPath.row]
+            DataManager.shared.deleteCity(target)
+            DataManager.shared.cityList.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .fade)
+            
+            
+        }
+    }
 }
 
 extension SearchViewController: UIScrollViewDelegate {
